@@ -61,22 +61,9 @@ export const Footer = () => {
         <div className="footer__section">
           <h3 className="footer__title">Soporte</h3>
           <ul className="footer__links">
-            <li><a href="/help">Centro de Ayuda</a></li>
-            <li><a href="/contact">Contáctanos</a></li>
-            <li><a href="/faq">Preguntas Frecuentes</a></li>
+            <li><a href="/help">Manual de usuario</a></li>
+            <li><a href="/contact">Sobre nosotros</a></li>
             <li><a href="/account">Cuenta</a></li>
-            <li><a href="/privacy">Privacidad</a></li>
-          </ul>
-        </div>
-
-        {/* Legal */}
-        <div className="footer__section">
-          <h3 className="footer__title">Legal</h3>
-          <ul className="footer__links">
-            <li><a href="/terms">Términos de Uso</a></li>
-            <li><a href="/privacy-policy">Política de Privacidad</a></li>
-            <li><a href="/cookies">Política de Cookies</a></li>
-            <li><a href="/licenses">Licencias</a></li>
           </ul>
         </div>
       </div>
