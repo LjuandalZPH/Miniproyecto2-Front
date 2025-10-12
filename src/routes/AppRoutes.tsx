@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { LandingPage } from '../pages/LandingPage/LandingPage';
 import { MoviesPage } from '../pages/MoviesPage/MoviesPage';
+import ProfilePage from "../pages/ProfilePage/ProfilePage";
+import RegisterPage from "../pages/RegisterPage/RegisterPage";
 import { AboutPage } from '../pages/AboutPage';
 
 export const AppRoutes = () => (
@@ -8,6 +10,8 @@ export const AppRoutes = () => (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/movies" element={<MoviesPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/register" element={<RegisterPage />} />
       <Route path="/about" element={<AboutPage />} />
     </Routes>
   </BrowserRouter>
