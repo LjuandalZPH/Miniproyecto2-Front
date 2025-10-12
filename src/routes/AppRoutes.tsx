@@ -3,6 +3,8 @@ import { LandingPage } from '../pages/LandingPage/LandingPage';
 import { MoviesPage } from '../pages/MoviesPage/MoviesPage';
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import RegisterPage from "../pages/RegisterPage/RegisterPage";
+import { AboutPage } from '../pages/AboutPage';
+import { LoginPage } from '../pages/LoginPage/LoginPage';
 
 export const AppRoutes = () => (
   <BrowserRouter>
@@ -11,6 +13,8 @@ export const AppRoutes = () => (
       <Route path="/movies" element={<MoviesPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/login" element={<LoginPage />} />
     </Routes>
   </BrowserRouter>
 );

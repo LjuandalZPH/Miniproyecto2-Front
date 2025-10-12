@@ -59,7 +59,7 @@
     }
   }
 
-  &__link {
+  &__link, &__auth-btn {
     color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     font-size: 0.95rem;
@@ -68,25 +68,30 @@
     border-radius: 6px;
     transition: all 0.3s ease;
     position: relative;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
 
-    &:hover {
+    &:hover, &:focus {
       color: white;
       background-color: rgba(255, 255, 255, 0.05);
     }
+  }
 
-    &--active {
-      color: white;
-      background-color: rgba(229, 9, 20, 0.1);
-      
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: -1rem;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #E50914, transparent);
-      }
+  // Estado activo para Home, Login y Register
+  &__link--active, &__auth-btn--active {
+    color: white;
+    background-color: rgba(229, 9, 20, 0.1);
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -1rem;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #E50914, transparent);
     }
   }
 
@@ -113,5 +118,23 @@
       background-color: rgba(255, 255, 255, 0.1);
       transform: scale(1.1);
     }
+  }
+}
+
+// Responsive
+@media (max-width: 700px) {
+  .navbar__container {
+    padding: 1rem 1rem;
+  }
+  .navbar__logo-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .navbar__nav {
+    gap: 0.5rem;
+  }
+  .navbar__link, .navbar__auth-btn {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.92rem;
   }
 }

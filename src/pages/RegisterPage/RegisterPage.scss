@@ -33,16 +33,22 @@
   gap: 1rem;
 
   input {
-    background-color: #aaa;
-    border: none;
-    border-radius: 6px;
-    padding: 0.8rem;
+    background: #181818;
+    color: #fff;
     font-size: 1rem;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    border: none;
     outline: none;
-    color: #000;
+    transition: border 0.2s;
 
     &::placeholder {
-      color: #333;
+      color: #888;
+    }
+
+    &:focus {
+      border-color: #ff0000;
+      background: #1a1a1a;
     }
   }
 
