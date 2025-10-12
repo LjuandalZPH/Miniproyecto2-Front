@@ -1,0 +1,116 @@
+.login-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #181818 0%, #222 100%);
+  color: #fff;
+}
+
+.login-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.login-card {
+  background: #3c3c3c;
+  border-radius: 18px;
+  max-width: 400px;
+  width: 100%;
+  padding: 2.5rem 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  label {
+    font-size: 1rem;
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+    letter-spacing: 0.5px;
+  }
+
+  input {
+    font-size: 1rem;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+
+    background: #181818;
+    color: #fff;
+    outline: none;
+    transition: border 0.2s;
+
+    &:focus {
+      border-color: #ff0000;
+      background: #1a1a1a;
+    }
+  }
+}
+
+.login-btn {
+  margin-top: 1rem;
+  padding: 0.75rem 0;
+  background: linear-gradient(90deg, #e50914 60%, #ff4757 100%);
+  color: #fff;
+  font-size: 1.08rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 12px #e5091433;
+  transition: background 0.2s;
+
+  &:focus {
+    background: linear-gradient(90deg, #FFD700 60%, #E50914 100%);
+    color: #181818;
+    outline: 2px solid #FFD700;
+    outline-offset: 2px;
+  }
+}
+
+.login-links {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.login-link {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.98rem;
+  transition: color 0.2s;
+
+  &:hover,
+  &:focus {
+    color: #E50914;
+    text-decoration: underline;
+    outline: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .login-main {
+    min-height: 60vh;
+    padding: 2rem 0;
+  }
+  .login-card {
+    padding: 2rem 1rem 1.5rem 1rem;
+  }
+}
