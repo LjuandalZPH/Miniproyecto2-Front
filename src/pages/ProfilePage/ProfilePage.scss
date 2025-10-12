@@ -1,0 +1,140 @@
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #1e1e1e;
+  padding: 1rem;
+}
+
+.profile-card {
+  background-color: #3a3a3a;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  width: 350px;
+  text-align: center;
+  transition: 0.3s ease;
+
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+  }
+}
+
+.profile-avatar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+
+  img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #555;
+    object-fit: cover;
+  }
+}
+
+.profile-info {
+  text-align: left;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+
+  p {
+    margin: 6px 0;
+    font-size: 1rem;
+  }
+}
+
+.profile-buttons {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  .edit-btn,
+  .delete-btn {
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+
+    &:hover {
+      background-color: darkred;
+    }
+  }
+}
+
+.home-btn {
+  margin-top: 2rem;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: darkred;
+  }
+}
+
+/* 🔹 Responsive Design */
+@media (max-width: 768px) {
+  .profile-card {
+    width: 90%;
+    padding: 1.5rem;
+  }
+
+  .profile-avatar img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-info p {
+    font-size: 0.95rem;
+  }
+
+  .profile-buttons {
+    flex-direction: column;
+    align-items: center;
+
+    .edit-btn,
+    .delete-btn {
+      width: 80%;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .home-btn {
+    width: 80%;
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-card {
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .profile-info p {
+    font-size: 0.9rem;
+  }
+
+  .profile-avatar img {
+    width: 90px;
+    height: 90px;
+  }
+}
