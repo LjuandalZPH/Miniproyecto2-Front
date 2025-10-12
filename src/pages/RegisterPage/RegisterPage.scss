@@ -101,3 +101,27 @@
     height: 250px;
   }
 }
+
+.login-redirect {
+  margin-top: 1rem;
+  text-align: center;
+
+  p {
+    color: #ddd;
+    font-size: 0.9rem;
+
+    span {
+      color: red;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s;
+
+      &:hover {
+        color: darkred;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+
