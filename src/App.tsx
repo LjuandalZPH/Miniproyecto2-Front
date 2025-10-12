@@ -41,43 +41,63 @@ function App() {
       setLoading(false);
     }
   };
+return (
+  <div className="login-page">
+    <div className="login-wrapper">
+      <div className="login-container">
+        <form onSubmit={handleSubmit} className="login-form">
+          <h1>Iniciar Sesión</h1>
 
-  return (
-    <div className="login-container">
-      <h1>Iniciar sesión</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Correo electrónico:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Contraseña:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {errorMessage && <p>{errorMessage}</p>}
-        <button type="submit" disabled={loading}>
-          {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
-        </button>
-      </form>
+          <div className="input-group">
+            <input
+              type="email"
+              placeholder="Introduce tu email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-      {/* Botón para redirigir a la página de registro */}
-      <div className="register-link">
-        <p>¿No tienes una cuenta? <button onClick={() => navigate('/register')}>Regístrate</button></p>
+          <div className="input-group">
+            <input
+              type="password"
+              placeholder="Introduce tu contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="forgot-password">
+            <a href="#">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+          <button type="submit" disabled={loading} className="btn red">
+            {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+          </button>
+
+          <div className="register-section">
+            <p>¿No tienes cuenta?</p>
+            <button
+              className="btn red"
+              onClick={() => navigate('/register')}
+              type="button"
+            >
+              Registrarme
+            </button>
+          </div>
+        </form>
       </div>
     </div>
-  );
+
+    <div className="login-image">
+      <img src="/logo_Oscuro_Moovies.jpg" alt="Logo Moovie" />
+    </div>
+  </div>
+);
+
 }
 
 export default App;
