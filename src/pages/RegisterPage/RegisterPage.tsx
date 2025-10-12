@@ -33,14 +33,20 @@ const RegisterPage: React.FC = () => {
           <form className="register-form" onSubmit={handleSubmit}>
             <input type="text" placeholder="Nombre" required />
             <input type="text" placeholder="Apellido" required />
-            <input type="number" placeholder="Edad" required />
+            <input
+              type="text"
+              placeholder="Edad"
+              required
+              inputMode="numeric" 
+              pattern="[0-9]*"
+            />
+
             <input type="email" placeholder="Correo Electrónico" required />
             <input type="password" placeholder="Contraseña" required />
             <input type="password" placeholder="Confirmar Contraseña" required />
             <button type="submit" className="confirm-btn">Confirmar</button>
           </form>
 
-          
           <div className="login-redirect">
             <p>
               ¿Ya tienes una cuenta?{" "}
@@ -73,4 +79,5 @@ const RegisterPage: React.FC = () => {
 };
 
 export default RegisterPage;
+
 
