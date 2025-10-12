@@ -39,7 +39,7 @@ export const Navbar = () => {
         {/* Right side actions */}
         <div className="navbar__actions">
           {/* Search Icon */}
-          <button className="navbar__icon-btn" aria-label="Search">
+          <button className="navbar__icon-btn" aria-label="Buscar">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="8" strokeWidth="2"/>
               <path d="M21 21L16.65 16.65" strokeWidth="2" strokeLinecap="round"/>
@@ -47,12 +47,20 @@ export const Navbar = () => {
           </button>
 
           {/* User Icon */}
-          <button className="navbar__icon-btn" aria-label="User profile">
+          <button className="navbar__icon-btn" aria-label="Perfil de usuario">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="12" cy="8" r="4" strokeWidth="2"/>
               <path d="M4 20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20" strokeWidth="2" strokeLinecap="round"/>
             </svg>
           </button>
+
+          {/* Login/Register Buttons */}
+          <Link to="/login" className="navbar__auth-btn navbar__auth-btn--login">
+            Iniciar sesión
+          </Link>
+          <Link to="/register" className="navbar__auth-btn navbar__auth-btn--register">
+            Registrarse
+          </Link>
         </div>
       </div>
     </nav>
