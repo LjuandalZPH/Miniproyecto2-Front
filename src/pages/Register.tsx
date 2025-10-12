@@ -1,19 +1,20 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './styles/App.scss';
+import '../styles/Register.scss'; 
 
-function App() {
+function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Usamos React Router para redirigir
+  const navigate = useNavigate();
 
   const validateEmail = (email: string) => /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email);
-  const validatePassword = (password: string) => password.length >= 6; // Validación simple de contraseña
+  const validatePassword = (password: string) => password.length >= 6;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validar correo y contraseña
@@ -28,24 +29,23 @@ function App() {
 
     setLoading(true);
     try {
-      const response = await axios.post('/api/login', { email, password });
-
+      const response = await axios.post('/api/register', { email, password });
       const { token } = response.data;
-      localStorage.setItem('authToken', token); // Guardar token en localStorage
 
-      // Redirigir a la página de dashboard o principal
-      navigate('/dashboard');
+      // Guardar token en el localStorage y redirigir al login
+      localStorage.setItem('authToken', token);
+      navigate('/login'); // Redirigir al login después de registrarse
     } catch (error) {
-      setErrorMessage('Credenciales incorrectas');
+      setErrorMessage('Error al registrar cuenta');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-container">
-      <h1>Iniciar sesión</h1>
-      <form onSubmit={handleSubmit}>
+    <div className="register-container">
+      <h1>Crear cuenta</h1>
+      <form onSubmit={handleRegister}>
         <div>
           <label htmlFor="email">Correo electrónico:</label>
           <input
@@ -68,18 +68,11 @@ function App() {
         </div>
         {errorMessage && <p>{errorMessage}</p>}
         <button type="submit" disabled={loading}>
-          {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+          {loading ? 'Creando cuenta...' : 'Crear cuenta'}
         </button>
       </form>
-
-      {/* Botón para redirigir a la página de registro */}
-      <div className="register-link">
-        <p>¿No tienes una cuenta? <button onClick={() => navigate('/register')}>Regístrate</button></p>
-      </div>
     </div>
   );
 }
 
-export default App;
-
-
+export default Register;
