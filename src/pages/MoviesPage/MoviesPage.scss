@@ -1,0 +1,185 @@
+.movies-page {
+  background-color: #111;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  /* === FEATURED SECTION === */
+  .featured {
+    padding: 2rem;
+    background: #1a1a1a;
+    border-radius: 16px;
+    margin: 2rem;
+    text-align: center;
+
+    &__title {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    &__description {
+      font-size: 1rem;
+      color: #ccc;
+      max-width: 700px;
+      margin: 0 auto 1rem;
+      line-height: 1.5;
+    }
+
+    &__buttons {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  }
+
+  /* === BUTTONS === */
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+
+    &--play {
+      background-color: #e50914;
+      color: white;
+
+      &:hover {
+        background-color: #b00610;
+      }
+    }
+
+    &--comments {
+      background-color: #333;
+      color: white;
+
+      &:hover {
+        background-color: #444;
+      }
+    }
+  }
+
+  /* === MOVIES CONTENT === */
+  .movies-content {
+    flex: 1;
+    padding: 2rem;
+
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      background-color: #e50914;
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+
+      .card {
+        background-color: #222;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+      }
+    }
+  }
+
+
+  /* Tablets (≤1024px) */
+  @media (max-width: 1024px) {
+    .featured {
+      margin: 1.5rem;
+      padding: 1.5rem;
+
+      &__title {
+        font-size: 1.75rem;
+      }
+    }
+
+    .movies-content {
+      padding: 1.5rem;
+      h3 {
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+  /* Móviles (≤768px) */
+  @media (max-width: 768px) {
+    .featured {
+      margin: 1rem;
+      padding: 1.25rem;
+
+      &__title {
+        font-size: 1.5rem;
+      }
+
+      &__buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+    }
+
+    .movies-content {
+      padding: 1rem;
+
+      .card-grid {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      }
+    }
+
+    .btn {
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+  }
+
+  /* Pantallas pequeñas (≤480px) */
+  @media (max-width: 480px) {
+    .featured {
+      border-radius: 8px;
+
+      &__title {
+        font-size: 1.25rem;
+      }
+
+      &__description {
+        font-size: 0.9rem;
+      }
+    }
+
+    .movies-content {
+      h3 {
+        font-size: 1.1rem;
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+    }
+  }
+}
