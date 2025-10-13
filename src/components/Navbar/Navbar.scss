@@ -59,7 +59,7 @@
     }
   }
 
-  &__link {
+  &__link, &__auth-btn {
     color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     font-size: 0.95rem;
@@ -67,26 +67,38 @@
     padding: 0.5rem 1rem;
     border-radius: 6px;
     transition: all 0.3s ease;
-    position: relative;
+    position: relative; // Necesario para el pseudo-elemento
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
 
-    &:hover {
+    &:hover, &:focus {
       color: white;
       background-color: rgba(255, 255, 255, 0.05);
     }
 
-    &--active {
-      color: white;
-      background-color: rgba(229, 9, 20, 0.1);
-      
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: -1rem;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #E50914, transparent);
-      }
+    &::after {
+      content: '';
+      position: absolute;
+      left: 15%;
+      right: 15%;
+      bottom: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #E50914, transparent);
+      border-radius: 2px;
+      opacity: 0;
+      transition: left 0.2s, right 0.2s, width 0.2s, opacity 0.2s;
+      pointer-events: none;
+    }
+  }
+
+  &__link--active, &__auth-btn--active {
+    color: white;
+    background-color: rgba(229, 9, 20, 0.1);
+
+    &::after {
+      opacity: 1;
     }
   }
 
@@ -113,5 +125,52 @@
       background-color: rgba(255, 255, 255, 0.1);
       transform: scale(1.1);
     }
+  }
+
+  &__search-form {
+    position: relative;
+    margin-left: 0.7rem;
+    display: flex;
+    align-items: center;
+  }
+
+  &__search-input {
+    background: #222;
+    color: #fff;
+    border: 1.5px solid #E50914;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    width: 160px;
+    outline: none;
+    transition: border 0.2s;
+
+    &:focus {
+      border-color: #ff0800;
+      background: #181818;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 700px) {
+  .navbar__container {
+    padding: 1rem 1rem;
+  }
+  .navbar__logo-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .navbar__nav {
+    gap: 0.5rem;
+  }
+  .navbar__link, .navbar__auth-btn {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.92rem;
+  }
+  .navbar__search-input {
+    width: 110px;
+    font-size: 0.92rem;
+    padding: 0.4rem 0.7rem;
   }
 }
