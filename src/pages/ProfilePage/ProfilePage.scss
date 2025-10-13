@@ -49,14 +49,40 @@
   }
 }
 
+.profile-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  margin-bottom: 1.5rem;
+
+  label {
+    font-weight: bold;
+    margin-top: 5px;
+  }
+
+  input {
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background-color: #555;
+    color: white;
+    font-size: 1rem;
+
+    &:focus {
+      background-color: #666;
+    }
+  }
+}
+
 .profile-buttons {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
   gap: 0.5rem;
 
-  .edit-btn,
-  .delete-btn {
+  button {
     background-color: red;
     border: none;
     color: white;
@@ -68,6 +94,20 @@
 
     &:hover {
       background-color: darkred;
+    }
+  }
+
+  .save-btn {
+    background-color: #e60000; /* mismo tono que los otros */
+    &:hover {
+      background-color: #b30000;
+    }
+  }
+
+  .cancel-btn {
+    background-color: #444;
+    &:hover {
+      background-color: #333;
     }
   }
 }
@@ -109,8 +149,7 @@
     flex-direction: column;
     align-items: center;
 
-    .edit-btn,
-    .delete-btn {
+    button {
       width: 80%;
       margin-bottom: 0.5rem;
     }
@@ -138,3 +177,25 @@
     height: 90px;
   }
 }
+
+.logout-btn {
+  background-color: red;
+  border: none;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+  margin-top: 1.5rem; /* 🔹 separa el botón del resto */
+  display: block;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+
+  &:hover {
+    background-color: darkred;
+  }
+}
+
+
