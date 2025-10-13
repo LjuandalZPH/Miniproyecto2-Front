@@ -7,7 +7,7 @@ export interface LoginResponse {
 }
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
-  const res = await api.post('/login', { email, password });
+  const res = await api.post('/api/login', { email, password });
   return res.data;
 };
 
@@ -20,19 +20,19 @@ export interface RegisterData {
 }
 
 export const register = async (userData: RegisterData): Promise<any> => {
-  const res = await api.post('/users', userData);
+  const res = await api.post('/api/users', userData);
   return res.data;
 };
 
 export const getProfile = async () => {
-  const res = await api.get("/profile"); 
+  const res = await api.get("/api/profile"); 
   return res.data.user; 
 };
 
 export const updateUser = async (id: string, updatedData: any) => {
   const token = localStorage.getItem("token");
 
-  const response = await fetch(`http://localhost:3000/api/users/${id}`, {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -50,11 +50,10 @@ export const updateUser = async (id: string, updatedData: any) => {
 
 export const deleteUser = async (id: string) => {
   try {
-    const res = await api.delete(`/users/${id}`);
+    const res = await api.delete(`/api/users/${id}`);
     return res.data;
   } catch (error: any) {
     console.error("Error al eliminar usuario:", error);
     throw error.response?.data || { message: "Error al eliminar usuario" };
   }
 };
-
