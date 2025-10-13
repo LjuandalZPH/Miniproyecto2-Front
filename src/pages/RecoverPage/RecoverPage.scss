@@ -1,0 +1,128 @@
+.recover-page {
+  min-height: 100vh;
+  background-color: #1e1e1e;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.recover-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.recover-card {
+  background-color: #3a3a3a;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  width: 350px;
+  text-align: center;
+
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+  }
+
+  .recover-text {
+    color: #ccc;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+  }
+}
+
+.recover-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  input {
+    background-color: #aaa;
+    border: none;
+    border-radius: 6px;
+    padding: 0.8rem;
+    font-size: 1rem;
+    outline: none;
+    color: #000;
+
+    &::placeholder {
+      color: #333;
+    }
+  }
+
+  .send-btn {
+    background-color: red;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    padding: 0.8rem;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+
+    &:hover {
+      background-color: darkred;
+      transform: scale(1.03);
+    }
+  }
+}
+
+.back-btn {
+  margin-top: 1rem;
+  background-color: transparent;
+  border: 2px solid red;
+  color: red;
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+
+  &:hover {
+    background-color: red;
+    color: white;
+    transform: scale(1.03);
+  }
+}
+
+@media (max-width: 480px) {
+  .recover-card {
+    width: 90%;
+    padding: 1.5rem;
+
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    .recover-text {
+      font-size: 0.9rem;
+    }
+  }
+}
+.back-btn {
+  margin-top: 1rem;
+  background-color: transparent;
+  border: 2px solid red;
+  color: red;
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+
+  &:hover {
+    background-color: red;
+    color: white;
+    transform: scale(1.03);
+  }
+}
