@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./ChangePasswordPage.scss";
 import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
