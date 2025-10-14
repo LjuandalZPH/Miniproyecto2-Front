@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import './Navbar.scss';
 
@@ -6,7 +6,15 @@ export const Navbar = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const searchInput = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check authentication status on mount and when token changes
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
+  }, []);
 
   useEffect(() => {
     if (showSearch && searchInput.current) {
@@ -22,6 +30,13 @@ export const Navbar = () => {
       setShowSearch(false);
       setSearchQuery('');
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    // Navegar al login, o recargar la página
+    navigate('/login');
   };
 
   return (
@@ -91,13 +106,24 @@ export const Navbar = () => {
             </svg>
           </Link>
 
-          {/* Login/Register Buttons */}
-          <Link to="/login" className="navbar__auth-btn navbar__auth-btn--login">
-            Iniciar sesión
-          </Link>
-          <Link to="/register" className="navbar__auth-btn navbar__auth-btn--register">
-            Registrarse
-          </Link>
+          {/* Auth Buttons */}
+          {!isAuthenticated ? (
+            <>
+              <Link to="/login" className="navbar__auth-btn navbar__auth-btn--login">
+                Iniciar sesión
+              </Link>
+              <Link to="/register" className="navbar__auth-btn navbar__auth-btn--register">
+                Registrarse
+              </Link>
+            </>
+          ) : (
+            <button
+              className="navbar__auth-btn navbar__auth-btn--logout"
+              onClick={handleLogout}
+            >
+              Cerrar sesión
+            </button>
+          )}
         </div>
       </div>
     </nav>
