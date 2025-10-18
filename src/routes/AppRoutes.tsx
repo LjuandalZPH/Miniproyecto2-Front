@@ -7,6 +7,7 @@ import { AboutPage } from '../pages/AboutPage';
 import { LoginPage } from '../pages/LoginPage/LoginPage';
 import RecoverPasswordPage from "../pages/RecoverPage/RecoverPage";
 import ChangePasswordPage from "../pages/ChangePasswordPage/ChangePasswordPage";
+import MovieDetailPage from '../pages/MoviesDetails/Moviesdetails';
 
 export const AppRoutes = () => (
   <BrowserRouter>
@@ -19,6 +20,7 @@ export const AppRoutes = () => (
       <Route path="/login" element={<LoginPage />} />
       <Route path="/recover" element={<RecoverPasswordPage />} />
       <Route path="/change-password" element={<ChangePasswordPage />} />
+      <Route path="/movies/:id" element={<MovieDetailPage />} />
     </Routes>
   </BrowserRouter>
 );
