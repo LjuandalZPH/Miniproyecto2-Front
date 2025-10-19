@@ -1,0 +1,193 @@
+.movie-details-container {
+  background-color: #1e1e1e;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.movie-details-content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 3rem 5%;
+  background-color: #121212;
+  border-radius: 12px;
+  margin: 2rem auto;
+  max-width: 1200px;
+}
+
+/* --- SECCIÓN IZQUIERDA (IMAGEN Y BOTONES) --- */
+.movie-left {
+  flex: 1;
+  max-width: 360px;
+  background-color: #1f1f1f;
+  border-radius: 15px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: right;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+
+  .movie-poster,
+  video {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    background-color: #333;
+    object-fit: cover;
+  }
+
+  .featured-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0.5rem 0 1rem;
+  }
+
+  .play-btn {
+    background-color: #e50914;
+    border: none;
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    margin-bottom: 1rem;
+
+    &:hover {
+      background-color: #b0060f;
+    }
+  }
+
+  .fav-section {
+  display: flex;
+  justify-content: center; /* centra el grupo en el eje horizontal */
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+  position: relative;
+  left: 10px; /* 🔹 desplaza todo el grupo un poco hacia la derecha */
+
+  .fav-btn {
+    background-color: #e50914;
+    border: none;
+    color: white;
+    padding: 0.6rem 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: #b0060f;
+    }
+  }
+
+  .fav-icon {
+    font-size: 1.4rem;
+    color: #555;
+    transition: color 0.3s ease;
+    margin-top: 2px;
+
+    &.active {
+      color: #f5c518;
+    }
+  }
+}
+
+
+}
+
+/* --- SECCIÓN DERECHA (DETALLES Y DESCRIPCIÓN) --- */
+.movie-right {
+  flex: 1.5;
+  background-color: #1f1f1f;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+
+  .movie-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .movie-desc {
+    font-size: 1rem;
+    color: #ccc;
+    line-height: 1.6;
+  }
+}
+
+/* --- COMENTARIOS --- */
+.comments-section {
+  background-color: #1f1f1f;
+  margin: 2rem auto;
+  border-radius: 12px;
+  padding: 2rem 2.5rem;
+  width: 90%;
+  max-width: 1200px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+
+  h3 {
+    margin-bottom: 1.2rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .comment-card {
+    background-color: #262626;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+
+    .comment-user {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .comment-rating {
+      display: flex;
+      gap: 3px;
+      margin: 4px 0;
+    }
+
+    .comment-text {
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+
+    .star {
+      color: #f5c518;
+    }
+  }
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+  .movie-details-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .movie-right {
+    width: 100%;
+  }
+
+  .movie-left {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .comments-section {
+    width: 95%;
+  }
+}
+

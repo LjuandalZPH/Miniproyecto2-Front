@@ -1,0 +1,134 @@
+.movie-player-page {
+  background-color: #0e0e0e;
+  min-height: 100vh;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .navbar {
+    width: 100%;
+    margin-bottom: 2rem;
+    z-index: 10;
+  }
+
+  .movie-player-container {
+    width: 90%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 6rem; /* 🔹 espacio para que no tape el navbar */
+
+    /* 🎥 CONTENEDOR DEL VIDEO */
+    .video-wrapper {
+      width: 100%;
+      background-color: #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+
+      video,
+      .video-placeholder {
+        width: 100%;
+        border-radius: 12px;
+      }
+
+      .video-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+
+        img {
+          max-width: 70%;
+          border-radius: 10px;
+          margin-bottom: 1rem;
+        }
+      }
+    }
+
+    /* ⭐ BOTÓN DE FAVORITOS */
+    .actions {
+      width: 100%; /* 🔹 ocupa todo el ancho del video */
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; /* 🔹 alinea a la izquierda */
+      gap: 0.5rem;
+      margin: 1rem 0;
+
+      .fav-btn {
+        background-color: red;
+        border: none;
+        color: white;
+        padding: 0.6rem 1.4rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+
+        &:hover {
+          background-color: darkred;
+        }
+      }
+
+      .fav-icon {
+        font-size: 1.4rem;
+        color: #555;
+        transition: 0.3s;
+
+        &.active {
+          color: #ffcc00; /* ⭐ amarilla cuando está activa */
+        }
+      }
+    }
+
+    /* 💬 COMENTARIOS */
+    .comments-section {
+      width: 100%;
+      background-color: #1a1a1a;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+
+      h3 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        color: #fff;
+      }
+
+      .comment-card {
+        background-color: #2a2a2a;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+
+        .comment-user {
+          font-weight: bold;
+          color: #fff;
+        }
+
+        .comment-rating {
+          margin: 0.3rem 0;
+        }
+
+        .comment-text {
+          color: #ccc;
+        }
+      }
+    }
+  }
+
+  /* ⚫ FOOTER */
+  footer {
+    width: 100%;
+    background-color: #111;
+    margin-top: 3rem;
+    padding: 2rem 0;
+    display: flex;
+    justify-content: center;
+  }
+}
+
