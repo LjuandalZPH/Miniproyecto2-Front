@@ -1,47 +1,45 @@
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import { getPostersFromPexels } from "../../services/pexelsService";
+import "swiper/css";
+import "swiper/css/autoplay";
+import { getVideosFromPexels } from "../../services/pexelsService";
 
 export const Carousel = () => {
-  const [photos, setPhotos] = useState<any[]>([]);
+  const [videos, setVideos] = useState<any[]>([]);
 
   useEffect(() => {
-    getPostersFromPexels().then(setPhotos);
+    getVideosFromPexels().then(setVideos);
   }, []);
 
-  if (!photos.length)
-    return <p style={{ color: "#ccc", textAlign: "center" }}>Cargando cartelera...</p>;
+  if (!videos.length)
+    return <p style={{ color: "#ccc", textAlign: "center" }}>Cargando videos...</p>;
 
   return (
     <section className="carousel-section">
-      <h2 className="carousel-title">Cartelera de películas</h2>
-
       <Swiper
         modules={[Autoplay]}
-        autoplay={{ delay: 3000 }}
-        loop
-        slidesPerView={5}        
+        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        loop={videos.length > 3}
+        slidesPerView={Math.min(3, videos.length)}
         spaceBetween={20}
-        grabCursor={true}         
-        style={{ padding: "10px 0" }}
+        grabCursor
       >
-        {photos.map((photo) => (
-          <SwiperSlide key={photo.id}>
+        {videos.map((video) => (
+          <SwiperSlide key={video.id}>
             <div className="carousel-item">
-              <img
-                src={photo.src.large}
-                alt={photo.photographer}
+              <video
+                src={video.video_files[0]?.link}
+                poster={video.image}
+                muted
+                autoPlay
+                loop
                 style={{
                   width: "100%",
                   height: "300px",
                   objectFit: "cover",
                   borderRadius: "10px",
-                  cursor: "pointer",
-                  transition: "transform 0.3s ease",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1.0)")}
               />
             </div>
           </SwiperSlide>

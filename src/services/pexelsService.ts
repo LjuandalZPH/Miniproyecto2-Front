@@ -1,19 +1,22 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/pexels/photos";
+const API_URL = "http://localhost:3000/api/pexels/videos";
 
-export const getPostersFromPexels = async () => {
+export const getVideosFromPexels = async () => {
   try {
     const response = await axios.get(API_URL, {
       params: {
-        query: "movie poster", 
-        per_page: 20,
-        orientation: "portrait",
+        query: "movie trailer", // 🔥 busca clips tipo trailers
+        per_page: 10,
+        min_duration: 5,
+        max_duration: 30,
       },
     });
-    return response.data.photos;
+
+    console.log("🎥 Videos desde backend:", response.data);
+    return response.data.videos || [];
   } catch (error: any) {
-    console.error("Error al obtener carteleras:", error.message);
+    console.error("Error al obtener videos desde Pexels:", error.message);
     return [];
   }
 };
