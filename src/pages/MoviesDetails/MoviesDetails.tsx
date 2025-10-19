@@ -26,9 +26,8 @@ const MovieDetailPage = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const navigate = useNavigate();
 
-//VERSION QUE HACE FETCH A BACKEND (AUN NO HAY PELICULAS POR LO QUE ESTE BLOQUE QUEDARA COMENTADO OKAY~?)
-
-  /*useEffect(() => {
+  /* 🔹 Versión con backend (comentada por ahora)
+  useEffect(() => {
     const fetchMovie = async () => {
       try {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/movies/${id}`);
@@ -41,41 +40,46 @@ const MovieDetailPage = () => {
     };
 
     fetchMovie();
-*/
-  useEffect(() => {
+  }, [id]);
+  */
+
   // 🔹 Simulación de carga (sin backend)
-  setTimeout(() => {
-    setMovie({
-      _id: id || "1",
-      title: `Película de prueba ${id}`,
-      description: "Esta es una descripción simulada para probar la vista MovieDetailPage.",
-      image: "/MoovieWithoutBackground.png",
-      videoUrl: "",
-      genre: "Acción",
-    });
-  }, 800); // Simula un pequeño retardo de red
+  useEffect(() => {
+    setTimeout(() => {
+      setMovie({
+        _id: id || "1",
+        title: `Película de prueba ${id}`,
+        description: "Esta es una descripción simulada para probar la vista MovieDetailPage.",
+        image: "/MoovieWithoutBackground.png",
+        videoUrl: "",
+        genre: "Acción",
+      });
+    }, 800);
 
-  // 🔹 Comentarios simulados
-  setComments([
-    { user: "John Doe", text: "Excelente película", rating: 5 },
-    { user: "Jane Smith", text: "Entretenida, pero algo lenta", rating: 3 },
-  ]);
-}, [id]);
-
+    // 🔹 Comentarios simulados
+    setComments([
+      { user: "John Doe", text: "Excelente película", rating: 5 },
+      { user: "Jane Smith", text: "Entretenida, pero algo lenta", rating: 3 },
+    ]);
+  }, [id]);
 
   const [isFavorite, setIsFavorite] = useState(false);
 
-const handleAddToFavorites = () => {
-  setIsFavorite(!isFavorite); // alterna el estado
-  alert("Película añadida a favoritos (pendiente conexión backend)");
-  // aquí luego puedes conectar con tu backend
-};
+  const handleAddToFavorites = () => {
+    setIsFavorite(!isFavorite);
+    alert("Película añadida a favoritos (pendiente conexión backend)");
+  };
+
+  // 🔹 👉 Nueva función para redirigir al reproductor
+  const handlePlayNow = () => {
+    navigate(`/watch/${movie?._id}`);
+  };
 
   if (!movie) return <p className="loading">Cargando detalles...</p>;
 
   return (
     <div className="movie-details-container">
-        <Navbar />
+      <Navbar />
       <div className="movie-details-content">
         {/* 🎞️ Imagen / Video */}
         <div className="movie-left">
@@ -85,14 +89,16 @@ const handleAddToFavorites = () => {
             <img src={movie.image} alt={movie.title} className="movie-poster" />
           )}
           <h2 className="featured-title">{movie.title}</h2>
-          <button className="play-btn">▶ Play Now</button>
+
+          {/* 👇 Botón que navega al reproductor */}
+          <button className="play-btn" onClick={handlePlayNow}>▶ Play Now</button>
 
           <div className="fav-section">
             <button className="fav-btn" onClick={handleAddToFavorites}>
-                Añadir a favoritos
+              Añadir a favoritos
             </button>
             <FaStar className={`fav-icon ${isFavorite ? "active" : ""}`} />
-            </div>
+          </div>
         </div>
 
         {/* 📝 Descripción */}
