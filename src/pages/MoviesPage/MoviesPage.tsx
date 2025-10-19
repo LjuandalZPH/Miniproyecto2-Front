@@ -1,8 +1,16 @@
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/Footer';
+import { useNavigate } from 'react-router-dom';
 import './MoviesPage.scss';
 
 export const MoviesPage = () => {
+  const navigate = useNavigate();
+
+  // Función que maneja el click en una película
+  const handleMovieClick = (id: string) => {
+    navigate(`/movies/${id}`);
+  };
+
   return (
     <div className="movies-page">
       <Navbar />
@@ -23,24 +31,34 @@ export const MoviesPage = () => {
       </section>
 
       <main className="movies-content">
+        {/* Películas por género */}
         <section className="genre-section">
           <h3>
             <span className="tag">Género</span> Películas por género
           </h3>
           <div className="card-grid">
-            {['1','2','3','4','5'].map((n) => (
-              <div key={n} className="card">
+            {['1', '2', '3', '4', '5'].map((n) => (
+              <div
+                key={n}
+                className="card clickable"
+                onClick={() => handleMovieClick(n)}
+              >
                 <span>Placeholder {n}</span>
               </div>
             ))}
           </div>
         </section>
 
+        {/* Tus favoritos */}
         <section className="favorites-section">
           <h3>Tus Favoritos</h3>
           <div className="card-grid">
-            {['1','2','3','4','5'].map((n) => (
-              <div key={n} className="card">
+            {['6', '7', '8', '9', '10'].map((n) => (
+              <div
+                key={n}
+                className="card clickable"
+                onClick={() => handleMovieClick(n)}
+              >
                 <span>Placeholder {n}</span>
               </div>
             ))}
@@ -52,3 +70,4 @@ export const MoviesPage = () => {
     </div>
   );
 };
+
