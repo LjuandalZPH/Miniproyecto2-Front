@@ -21,9 +21,11 @@ export const Hero = () => {
           </h1>
           <p className="hero__description">
             Con Moovies puedes tener acceso 24/7 a todos tus shows favoritos cuando quieras, 
-            donde quieras y el dispositivo que quieras
+            donde quieras y en el dispositivo que quieras.
           </p>
-          <button className="hero__cta">
+
+          {/* Enlace en lugar de botón */}
+          <a href="/movies" className="hero__cta">
             <svg 
               width="20" 
               height="20" 
@@ -33,8 +35,8 @@ export const Hero = () => {
             >
               <path d="M8 5v14l11-7z"/>
             </svg>
-            Iniciar
-          </button>
+            Iniciar sesión
+          </a>
         </div>
       </div>
     </section>

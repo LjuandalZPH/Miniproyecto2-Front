@@ -22,7 +22,7 @@ export const AppRoutes = () => (
       <Route path="/recover" element={<RecoverPasswordPage />} />
       <Route path="/change-password" element={<ChangePasswordPage />} />
       <Route path="/movies/:id" element={<MovieDetailPage />} />
-      <Route path="/watch/:id" element={<MoviePlayerPage />} /> {/* 👈 agregada */}
+      <Route path="/watch/:id" element={<MoviePlayerPage />} /> 
     </Routes>
   </BrowserRouter>
 );
