@@ -25,7 +25,7 @@ const MoviePlayerPage = () => {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [isFavorite, setIsFavorite] = useState(false);
-  const navigate = useNavigate();
+  
 
   useEffect(() => {
   const fetchMovieAndVideo = async () => {
@@ -77,7 +77,7 @@ const MoviePlayerPage = () => {
     if (!res.ok) throw new Error("Error al actualizar favorito");
 
     const updated = await res.json();
-    setIsFavorite(updated.favorite); // 👈 actualiza según backend
+    setIsFavorite(updated.favorite); // actualiza según backend
   } catch (error) {
     console.error("Error al cambiar favorito:", error);
   }

@@ -24,7 +24,7 @@ const RecoverPasswordPage: React.FC = () => {
 
     try {
       setLoading(true);
-      // 👇 Usa tu endpoint real aquí:
+      //  Usa tu endpoint real aquí:
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/users/recover-password`,
         { email }

@@ -36,7 +36,7 @@ const MovieDetailPage = () => {
 
       setMovie(data);
       setIsFavorite(data.favorite);
-      setComments(data.comments || []); // 👈 Cargamos los comentarios reales
+      setComments(data.comments || []); // Cargamos los comentarios reales
     } catch (error) {
       console.error(error);
     }
@@ -81,7 +81,7 @@ const MovieDetailPage = () => {
 
     if (!res.ok) throw new Error("Error al actualizar favorito");
 
-    // ✅ Cambiamos el estado local para reflejar el nuevo valor
+    //  Cambiamos el estado local para reflejar el nuevo valor
     setIsFavorite((prev) => !prev);
   } catch (error) {
     console.error("Error al marcar favorito:", error);
@@ -109,7 +109,7 @@ const MovieDetailPage = () => {
           )}
           <h2 className="featured-title">{movie.title}</h2>
 
-          {/* 👇 Botón que navega al reproductor */}
+          {/*  Botón que navega al reproductor */}
           <button className="play-btn" onClick={handlePlayNow}>▶ Play Now</button>
 
           <div className="fav-section">
@@ -120,14 +120,14 @@ const MovieDetailPage = () => {
           </div>
         </div>
 
-        {/* 📝 Descripción */}
+        {/*  Descripción */}
         <div className="movie-right">
           <h3 className="movie-title">{movie.title}</h3>
           <div className="movie-desc">{movie.description || "Sin descripción disponible."}</div>
         </div>
       </div>
 
-      {/* 💬 Sección de comentarios */}
+      {/*  Sección de comentarios */}
       <div className="comments-section">
         <h3>Comentarios</h3>
         {comments.map((comment, index) => (
