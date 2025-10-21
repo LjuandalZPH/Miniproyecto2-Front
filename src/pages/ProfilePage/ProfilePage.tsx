@@ -132,6 +132,10 @@ const ProfilePage: React.FC = () => {
     <div className="profile-page">
       <Navbar />
       <div className="profile-container">
+        <button className="home-btn" onClick={() => navigate("/")}>
+          Volver
+        </button>
+
         <div className="profile-card">
           <h2>Mi Cuenta</h2>
 
@@ -206,10 +210,8 @@ const ProfilePage: React.FC = () => {
             </>
           )}
         </div>
-
-        <button className="home-btn" onClick={() => navigate("/")}>
-          Volver
-        </button>
+        
+        
       </div>
       <Footer />
     </div>
