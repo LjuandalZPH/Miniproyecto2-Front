@@ -19,7 +19,7 @@ export const MoviesPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [favorites, setFavorites] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
-console.log("🔍 API_URL usada:", import.meta.env.VITE_API_URL);
+console.log(" API_URL usada:", import.meta.env.VITE_API_URL);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -107,7 +107,7 @@ console.log("🔍 API_URL usada:", import.meta.env.VITE_API_URL);
           </div>
         </section>
 
-        {/* ⭐ Tus favoritos */}
+        {/* Tus favoritos */}
         <section className="favorites-section">
           <h3>Tus Favoritos</h3>
           <div className="card-grid">

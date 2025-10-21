@@ -19,7 +19,7 @@
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
-    margin-top: 6rem; /* 🔹 espacio para que no tape el navbar */
+    margin-top: 6rem; /*  espacio para que no tape el navbar */
 
     /* 🎥 CONTENEDOR DEL VIDEO */
     .video-wrapper {
@@ -50,7 +50,7 @@
       }
     }
 
-    /* ⭐ BOTÓN DE FAVORITOS */
+    /*  BOTÓN DE FAVORITOS */
     .actions {
       width: 100%; /* 🔹 ocupa todo el ancho del video */
       display: flex;
@@ -80,12 +80,12 @@
         transition: 0.3s;
 
         &.active {
-          color: #ffcc00; /* ⭐ amarilla cuando está activa */
+          color: #ffcc00; /*  amarilla cuando está activa */
         }
       }
     }
 
-    /* 💬 COMENTARIOS */
+    /*  COMENTARIOS */
     .comments-section {
       width: 100%;
       background-color: #1a1a1a;
@@ -121,7 +121,7 @@
     }
   }
 
-  /* ⚫ FOOTER */
+  /*  FOOTER */
   footer {
     width: 100%;
     background-color: #111;
