@@ -14,7 +14,7 @@
     align-items: center;
     justify-content: space-between;
 
-    @media (max-width: 768px) {
+    @media (max-width: 950px) {
       padding: 0.8rem 1rem;
     }
   }
@@ -37,7 +37,7 @@
       width: 32px;
       height: 32px;
 
-      @media (max-width: 768px) {
+      @media (max-width: 950px) {
         width: 26px;
         height: 26px;
       }
@@ -58,7 +58,7 @@
     transform: translateX(-50%);
     align-items: center;
 
-    @media (max-width: 768px) {
+    @media (max-width: 950px) {
       position: fixed;
       top: 64px;
       left: 0;
@@ -130,7 +130,7 @@
     gap: 1rem;
     align-items: center;
 
-    @media (max-width: 768px) {
+    @media (max-width: 950px) {
       gap: 0.6rem;
     }
   }
@@ -177,7 +177,7 @@
       background: #181818;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 950px) {
       width: 120px;
       font-size: 0.9rem;
       padding: 0.4rem 0.7rem;
@@ -193,24 +193,51 @@
     cursor: pointer;
     padding: 0.3rem;
 
-    @media (max-width: 768px) {
+    @media (max-width: 950px) {
       display: block;
     }
   }
 }
 
 
+@media (max-width: 990px) {
+  .navbar__container {
+    padding: 0.8rem 1.2rem;
+  }
+
+  .navbar__logo-text {
+    font-size: 1.3rem;
+  }
+
+  .navbar__nav {
+    gap: 1rem;
+  }
+
+  .navbar__link,
+  .navbar__auth-btn {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.7rem;
+  }
+
+  .navbar__search-input {
+    width: 120px;
+  }
+}
+
 @media (max-width: 700px) {
   .navbar__container {
     padding: 1rem;
   }
+
   .navbar__nav {
     gap: 0.5rem;
   }
+
   .navbar__link,
   .navbar__auth-btn {
     font-size: 0.9rem;
   }
+
   .navbar__search-input {
     width: 110px;
   }
