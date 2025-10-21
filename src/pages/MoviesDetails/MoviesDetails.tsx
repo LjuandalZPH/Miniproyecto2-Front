@@ -26,23 +26,26 @@ const MovieDetailPage = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const navigate = useNavigate();
 
-  /* 🔹 Versión con backend (comentada por ahora)
+   
   useEffect(() => {
-    const fetchMovie = async () => {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/movies/${id}`);
-        if (!res.ok) throw new Error("Error al obtener los datos de la película");
-        const data = await res.json();
-        setMovie(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const fetchMovie = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/movies/${id}`);
+      if (!res.ok) throw new Error("Error al obtener los datos de la película");
+      const data = await res.json();
 
-    fetchMovie();
-  }, [id]);
-  */
+      setMovie(data);
+      setIsFavorite(data.favorite);
+      setComments(data.comments || []); // 👈 Cargamos los comentarios reales
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  fetchMovie();
+}, [id]);
+  
+/*
   // 🔹 Simulación de carga (sin backend)
   useEffect(() => {
     setTimeout(() => {
@@ -62,15 +65,31 @@ const MovieDetailPage = () => {
       { user: "Jane Smith", text: "Entretenida, pero algo lenta", rating: 3 },
     ]);
   }, [id]);
-
+*/
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const handleAddToFavorites = () => {
-    setIsFavorite(!isFavorite);
-    alert("Película añadida a favoritos (pendiente conexión backend)");
-  };
+  const handleAddToFavorites = async () => {
+  if (!movie) return;
 
-  // 🔹 👉 Nueva función para redirigir al reproductor
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/movies/${movie._id}/favorite`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) throw new Error("Error al actualizar favorito");
+
+    // ✅ Cambiamos el estado local para reflejar el nuevo valor
+    setIsFavorite((prev) => !prev);
+  } catch (error) {
+    console.error("Error al marcar favorito:", error);
+    alert("No se pudo cambiar el estado de favorito");
+  }
+};
+
+  
   const handlePlayNow = () => {
     navigate(`/watch/${movie?._id}`);
   };
