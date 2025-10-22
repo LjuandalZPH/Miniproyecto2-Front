@@ -114,10 +114,17 @@ export const Navbar = () => {
             </svg>
           </Link>
 
+          {/* Auth actions */}
           {!isAuthenticated ? (
-            <Link to="/login" className="navbar__auth-btn">
-              Sign in
-            </Link>
+            <>
+              {/* Show both login and register when not authenticated */}
+              <Link to="/login" className="navbar__auth-btn">
+                Iniciar sesión
+              </Link>
+              <Link to="/register" className="navbar__auth-btn">
+                Registrarse
+              </Link>
+            </>
           ) : (
             <button className="navbar__auth-btn" onClick={handleLogout}>
               Logout
