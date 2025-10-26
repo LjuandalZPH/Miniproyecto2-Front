@@ -85,6 +85,66 @@
       font-size: 0.9rem;
     }
 
+    /* Genre dropdown styles */
+    .genre-filter {
+      position: relative;
+      display: inline-block;
+      margin-left: 0.5rem;
+    }
+
+    .genre-btn {
+      background-color: transparent;
+      color: #ffffff;
+      border: 2px solid rgba(255, 0, 0, 0.08);
+      padding: 0.4rem 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .genre-btn:hover {
+      background-color: rgba(229,9,20,0.08);
+      color: #fff;
+      border-color: rgba(229,9,20,0.25);
+    }
+
+    .genre-list {
+      position: absolute;
+      top: 110%;
+      left: 0;
+      background: #222;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      border-radius: 8px;
+      padding: 0.35rem;
+      min-width: 160px;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .genre-item {
+      background: transparent;
+      color: #ddd;
+      padding: 0.5rem 0.6rem;
+      border-radius: 6px;
+      text-align: left;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.12s ease, color 0.12s ease;
+    }
+
+    .genre-item:hover {
+      background: rgba(229, 9, 20, 0.421);
+      color: #fff;
+    }
+
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));

@@ -57,3 +57,32 @@ export const deleteUser = async (id: string) => {
     throw error.response?.data || { message: "Error al eliminar usuario" };
   }
 };
+
+/**
+ * Obtener las películas favoritas de un usuario (helper centralizado).
+ * Retorna el array `favorites` que viene desde el backend.
+ */
+export const getUserFavorites = async (userId: string) => {
+  try {
+    const res = await api.get(`/api/users/${userId}/favorites`);
+    // backend devuelve { message, favorites }
+    return res.data?.favorites ?? res.data;
+  } catch (error: any) {
+    console.error("Error al obtener favoritos del usuario:", error);
+    throw error?.response?.data || { message: "Error al obtener favoritos" };
+  }
+};
+
+/**
+ * Alterna (add/remove) una película en los favoritos del usuario.
+ * Llama a PATCH /api/users/:userId/favorites/:movieId
+ */
+export const toggleFavorite = async (userId: string, movieId: string) => {
+  try {
+    const res = await api.patch(`/api/users/${userId}/favorites/${movieId}`);
+    return res.data;
+  } catch (error: any) {
+    console.error("Error al alternar favorito:", error);
+    throw error?.response?.data || { message: "Error al alternar favorito" };
+  }
+};
