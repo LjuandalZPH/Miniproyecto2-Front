@@ -20,11 +20,11 @@ export default function FavoritesPage() {
   useEffect(() => {
     const fetchFavorites = async () => {
         try {
-        const user = await getProfile(); // ✅ Igual que en MoviesPage
+        const user = await getProfile(); 
         const userId = user?._id || user?.id;
         if (!userId) return;
 
-        const data = await getUserFavorites(userId); // ✅ Pasamos el ID
+        const data = await getUserFavorites(userId); 
         setFavorites(data || []);
         } catch (err) {
         console.error("Error al obtener favoritos:", err);
@@ -44,7 +44,7 @@ export default function FavoritesPage() {
 
             await toggleFavorite(userId, movieId);
 
-            // 🔥 Actualiza el estado local eliminando la película sin recargar
+            
             setFavorites((prev) => prev.filter((m) => m._id !== movieId));
         } catch (err) {
             console.error("Error al quitar de favoritos:", err);
@@ -74,7 +74,7 @@ export default function FavoritesPage() {
                 <button
                     className="fav-remove-btn"
                     onClick={(e) => {
-                    e.stopPropagation(); // evita que se dispare el navigate
+                    e.stopPropagation(); 
                     handleRemoveFavorite(movie._id);
                     }}
                 >
