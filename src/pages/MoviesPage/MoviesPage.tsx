@@ -1,43 +1,37 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import { Navbar } from "../../components/Navbar";
+import { Footer } from "../../components/Footer";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getProfile, getUserFavorites } from "../../services/authService";
 import "./MoviesPage.scss";
 
 interface Movie {
   _id: string;
   title: string;
   description?: string;
-  image?: string;
   genre?: string;
+  image?: string;
   favorite?: boolean;
+  rating?: number;
 }
 
-/**
- * Movies page that lists movies.
- * - Reads "search" query param and requests filtered results from backend.
- */
 export const MoviesPage = () => {
+  const navigate = useNavigate();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [favorites, setFavorites] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const search = (searchParams.get("search") || "").trim();
-
+  const [loadingFavs, setLoadingFavs] = useState(false);
+  const [showGenres, setShowGenres] = useState(false);
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+  // Fetch all movies (simple list)
   useEffect(() => {
-    /**
-     * Fetch movies from backend.
-     * If "search" exists, appends it as a query parameter.
-     */
     const fetchMovies = async () => {
       setLoading(true);
       try {
-        const qs = search ? `?search=${encodeURIComponent(search)}` : "";
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/movies${qs}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/movies`);
         if (!res.ok) throw new Error("Error al obtener las películas");
         const data: Movie[] = await res.json();
         setMovies(data);
-        setFavorites(data.filter((m) => m.favorite));
       } catch (error) {
         console.error("Error cargando películas:", error);
       } finally {
@@ -46,11 +40,34 @@ export const MoviesPage = () => {
     };
 
     fetchMovies();
-  }, [search]);
+  }, []);
 
-  /**
-   * Navigate to movie details by ID.
-   */
+  // Fetch the user's favorites using the centralized helper
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      setLoadingFavs(true);
+      try {
+        const user = await getProfile();
+        const userId = user?._id || user?.id;
+        if (!userId) {
+          setFavorites([]);
+          return;
+        }
+
+        const favs: Movie[] = await getUserFavorites(userId);
+        setFavorites(favs || []);
+      } catch (error) {
+        console.error("Error cargando favoritos:", error);
+        setFavorites([]);
+      } finally {
+        setLoadingFavs(false);
+      }
+    };
+
+    fetchFavorites();
+  }, []);
+
+
   const handleMovieClick = (id: string) => {
     navigate(`/movies/${id}`);
   };
@@ -61,7 +78,7 @@ export const MoviesPage = () => {
     <div className="movies-page">
       <Navbar />
 
-      {/* Featured movie (first item if exists) */}
+      {/* Featured */}
       {movies.length > 0 && (
         <section className="featured">
           <div className="featured__container">
@@ -90,23 +107,69 @@ export const MoviesPage = () => {
       )}
 
       <main className="movies-content">
-        {/* Results or full list header */}
+        {/* Películas por género */}
         <section className="genre-section">
-          <h3>
-            {search ? (
-              <>
-                <span className="tag">Resultados</span> para “{search}”
-              </>
-            ) : (
-              <>
-                <span className="tag">Género</span> Películas disponibles
-              </>
-            )}
-          </h3>
+            <h3>
+              <span className="tag">Género</span>
+              <div className="genre-filter">
+                <button
+                  className="genre-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowGenres((s) => !s);
+                  }}
+                >
+                  {selectedGenre ?? "Todas"} ▾
+                </button>
 
+                {showGenres && (
+                  <div className="genre-list">
+                    <button
+                      className="genre-item"
+                      onClick={() => {
+                        setSelectedGenre(null);
+                        setShowGenres(false);
+                      }}
+                    >
+                      Todas
+                    </button>
+                    <button
+                      className="genre-item"
+                      onClick={() => {
+                        setSelectedGenre("Ciencia ficción");
+                        setShowGenres(false);
+                      }}
+                    >
+                      Ciencia ficción
+                    </button>
+                    <button
+                      className="genre-item"
+                      onClick={() => {
+                        setSelectedGenre("Documental");
+                        setShowGenres(false);
+                      }}
+                    >
+                      Documental
+                    </button>
+                    <button
+                      className="genre-item"
+                      onClick={() => {
+                        setSelectedGenre("Acción");
+                        setShowGenres(false);
+                      }}
+                    >
+                      Acción
+                    </button>
+                  </div>
+                )}
+              </div>
+              Películas disponibles
+            </h3>
           <div className="card-grid">
             {movies.length > 0 ? (
-              movies.map((movie) => (
+              // aplicar filtro por género en cliente
+              (selectedGenre ? movies.filter(m => (m.genre || '').toLowerCase() === selectedGenre.toLowerCase()) : movies)
+                .map((movie) => (
                 <div
                   key={movie._id}
                   className="card clickable"
@@ -124,41 +187,44 @@ export const MoviesPage = () => {
                 </div>
               ))
             ) : (
-              <p>No se encontraron películas.</p>
+              <p>No hay películas disponibles.</p>
             )}
           </div>
         </section>
 
-        {/* Favorites only when no active search */}
-        {!search && (
-          <section className="favorites-section">
-            <h3>Tus Favoritos</h3>
+        {/* Favoritos del usuario */}
+        <section className="favorites-section">
+          <h3>Tus Favoritos</h3>
+
+          {loadingFavs ? (
+            <p className="loading">Cargando favoritos...</p>
+          ) : favorites.length > 0 ? (
             <div className="card-grid">
-              {favorites.length > 0 ? (
-                favorites.map((movie) => (
-                  <div
-                    key={movie._id}
-                    className="card clickable"
-                    onClick={() => handleMovieClick(movie._id)}
-                  >
-                    {movie.image ? (
-                      <img src={movie.image} alt={movie.title} />
-                    ) : (
-                      <span>{movie.title}</span>
-                    )}
-                    <div className="card-overlay">
-                      <h4>{movie.title}</h4>
-                      <p>{movie.genre}</p>
-                    </div>
+              {favorites.map((movie) => (
+                <div
+                  key={movie._id}
+                  className="card clickable"
+                  onClick={() => handleMovieClick(movie._id)}
+                >
+                  {movie.image ? (
+                    <img src={movie.image} alt={movie.title} />
+                  ) : (
+                    <span>{movie.title}</span>
+                  )}
+                  <div className="card-overlay">
+                    <h4>{movie.title}</h4>
+                    <p>{movie.genre}</p>
                   </div>
-                ))
-              ) : (
-                <p>No tienes películas favoritas aún.</p>
-              )}
+                </div>
+              ))}
             </div>
-          </section>
-        )}
+          ) : (
+            <p>No tienes favoritos aún.</p>
+          )}
+        </section>
       </main>
+
+      <Footer />
     </div>
   );
 };

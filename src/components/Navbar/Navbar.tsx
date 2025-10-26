@@ -66,15 +66,26 @@ export const Navbar = () => {
             className={`navbar__link ${activeTab === "home" ? "navbar__link--active" : ""}`}
             onClick={() => setActiveTab("home")}
           >
-            Home
+            Inicio
           </Link>
           <Link
             to="/movies"
             className={`navbar__link ${activeTab === "movies" ? "navbar__link--active" : ""}`}
             onClick={() => setActiveTab("movies")}
           >
-            Movies & Shows
+            Peliculas y series
           </Link>
+
+    
+          {isAuthenticated && (
+            <Link
+              to="/favorites"
+              className={`navbar__link ${activeTab === "favorites" ? "navbar__link--active" : ""}`}
+              onClick={() => setActiveTab("favorites")}
+            >
+              Favoritos 
+            </Link>
+          )}
         </div>
 
         {/* Right side actions */}
@@ -107,12 +118,14 @@ export const Navbar = () => {
           )}
 
           {/* User Icon */}
-          <Link to="/profile" className="navbar__icon-btn" aria-label="Perfil de usuario">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <circle cx="12" cy="8" r="4" strokeWidth="2" />
-              <path d="M4 20c2-4 6-6 8-6s6 2 8 6" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          </Link>
+          {isAuthenticated && (
+            <Link to="/profile" className="navbar__icon-btn" aria-label="Perfil de usuario">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="8" r="4" strokeWidth="2" />
+                <path d="M4 20c2-4 6-6 8-6s6 2 8 6" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </Link>
+          )}
 
           {/* Auth actions */}
           {!isAuthenticated ? (

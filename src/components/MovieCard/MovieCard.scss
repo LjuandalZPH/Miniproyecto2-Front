@@ -1,0 +1,46 @@
+.movie-card {
+  position: relative;
+  width: 220px;
+  height: 320px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    .thumb {
+      opacity: 0;
+    }
+    .preview {
+      opacity: 1;
+    }
+  }
+
+  .thumb,
+  .preview {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+  }
+
+  .thumb {
+    opacity: 1;
+  }
+
+  .preview {
+    opacity: 0;
+  }
+
+  .overlay {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  }
+}
