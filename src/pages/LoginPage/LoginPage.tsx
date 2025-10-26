@@ -25,7 +25,7 @@ export const LoginPage = () => {
       }
 
       // Redirige al perfil tras login exitoso
-      navigate("/profile");
+      navigate("/movies");
     } catch (err: any) {
       console.error("Error al iniciar sesión:", err);
       setError(err?.response?.data?.message || "Credenciales inválidas o error de servidor");
