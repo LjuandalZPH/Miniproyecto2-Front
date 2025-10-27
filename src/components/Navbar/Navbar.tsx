@@ -3,8 +3,12 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.scss";
 
 /**
- * Top navigation bar with search input and navigation links.
- * - On search submit, navigates to /movies?search=<query>
+ * Top navigation bar component.
+ *
+ * Features:
+ * - Active link styling based on URL via NavLink.
+ * - Optional search box that navigates to /movies?search=<query>.
+ * - Auth-aware actions (login/register vs logout/profile).
  */
 export const Navbar = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -14,16 +18,22 @@ export const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Determine authentication state from localStorage token
     const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
   }, []);
 
   useEffect(() => {
+    // Focus input when the search box is toggled open
     if (showSearch && searchInput.current) {
       searchInput.current.focus();
     }
   }, [showSearch]);
 
+  /**
+   * Handle search form submission and navigate to /movies results.
+   * @param e Form submit event.
+   */
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const q = searchQuery.trim();
@@ -34,6 +44,9 @@ export const Navbar = () => {
     }
   };
 
+  /**
+   * Clear token and navigate to login page.
+   */
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);

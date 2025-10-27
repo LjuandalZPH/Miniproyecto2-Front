@@ -7,6 +7,13 @@ import api from "../../services/api";
 import "./MoviesPlayerPage.scss";
 import { FaStar } from "react-icons/fa";
 
+interface Subtitle {
+  lang: string;   // 'es' | 'en' | ...
+  label: string;  // 'Español' | 'English' | ...
+  src: string;    // "/subtitles/<id>.es.vtt" o URL absoluta
+  default?: boolean;
+}
+
 interface Movie {
   _id: string;
   title: string;
@@ -14,6 +21,7 @@ interface Movie {
   videoUrl: string;
   image: string;
   comments?: Comment[];
+  subtitles?: Subtitle[]; // <-- añadido para soportar subtítulos
 }
 
 interface Comment {
@@ -33,43 +41,43 @@ const MoviePlayerPage = () => {
   const [commentText, setCommentText] = useState("");
   const [commentRating, setCommentRating] = useState<number>(4);
   const [submittingComment, setSubmittingComment] = useState(false);
-  
 
   useEffect(() => {
-  const fetchMovieAndVideo = async () => {
-    try {
-      //  Obtener la película desde tu backend
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/movies/${id}`);
-      if (!res.ok) throw new Error("Error al obtener la película");
-      const data = await res.json();
-      setMovie(data);
-      setComments(data.comments || []);
-      setIsFavorite(data.favorite || false);
+    const fetchMovieAndVideo = async () => {
+      try {
+        //  Obtener la película desde tu backend
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/movies/${id}`);
+        if (!res.ok) throw new Error("Error al obtener la película");
+        const data = await res.json();
+        setMovie(data);
+        setComments(data.comments || []);
+        setIsFavorite(data.favorite || false);
 
-      //  Buscar video en Pexels usando el título o género
-      const searchTerm = data.title || data.genre || "movie";
-      const videoRes = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/pexels/videos?query=${encodeURIComponent(searchTerm)}&per_page=1`
-      );
+        //  Buscar video en Pexels usando el título o género
+        const searchTerm = data.title || data.genre || "movie";
+        const videoRes = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/pexels/videos?query=${encodeURIComponent(searchTerm)}&per_page=1`
+        );
 
-      if (!videoRes.ok) throw new Error("Error al obtener video de Pexels");
-      const videoData = await videoRes.json();
+        if (!videoRes.ok) throw new Error("Error al obtener video de Pexels");
+        const videoData = await videoRes.json();
 
-      if (videoData.videos && videoData.videos.length > 0) {
-        const firstVideo = videoData.videos[0];
-        const hdFile = firstVideo.video_files.find((f: any) => f.quality === "hd") || firstVideo.video_files[0];
+        if (videoData.videos && videoData.videos.length > 0) {
+          const firstVideo = videoData.videos[0];
+          const hdFile =
+            firstVideo.video_files.find((f: any) => f.quality === "hd") || firstVideo.video_files[0];
 
-        setMovie((prev) => (prev ? { ...prev, videoUrl: hdFile.link } : prev));
-      } else {
-        console.warn("No se encontraron videos en Pexels para:", searchTerm);
+          setMovie((prev) => (prev ? { ...prev, videoUrl: hdFile.link } : prev));
+        } else {
+          console.warn("No se encontraron videos en Pexels para:", searchTerm);
+        }
+      } catch (error) {
+        console.error("Error al cargar película o video:", error);
       }
-    } catch (error) {
-      console.error("Error al cargar película o video:", error);
-    }
-  };
+    };
 
-  fetchMovieAndVideo();
-}, [id]);
+    fetchMovieAndVideo();
+  }, [id]);
 
   // Cuando cargue la película, comprobar si el usuario la tiene en favoritos
   useEffect(() => {
@@ -116,8 +124,6 @@ const MoviePlayerPage = () => {
     loadUser();
   }, []);
 
-
-
   const handleAddToFavorites = async () => {
     if (!movie) return;
 
@@ -134,7 +140,6 @@ const MoviePlayerPage = () => {
     }
   };
 
-
   // Delete a comment (only allowed for the comment owner)
   const handleDeleteComment = async (commentId: string) => {
     if (!movie) return;
@@ -143,11 +148,11 @@ const MoviePlayerPage = () => {
     try {
       setDeletingId(commentId);
       const res = await api.delete(`/api/movies/${movie._id}/comments/${commentId}`);
-  const data = res.data;
-  const updatedMovie = data.movie ?? data;
-  // keep existing videoUrl to avoid interrupting playback
-  setMovie((prev) => ({ ...(updatedMovie || {}), videoUrl: prev?.videoUrl ?? updatedMovie?.videoUrl }));
-  setComments(updatedMovie.comments || []);
+      const data = res.data;
+      const updatedMovie = data.movie ?? data;
+      // keep existing videoUrl to avoid interrupting playback
+      setMovie((prev) => ({ ...(updatedMovie || {}), videoUrl: prev?.videoUrl ?? updatedMovie?.videoUrl }));
+      setComments(updatedMovie.comments || []);
     } catch (err) {
       console.error('Error borrando comentario desde player:', err);
       const anyErr: any = err;
@@ -157,7 +162,6 @@ const MoviePlayerPage = () => {
       setDeletingId(null);
     }
   };
-
 
   // Handler to post a new comment (same behavior as MoviesDetails)
   const handlePostComment = async (e?: React.FormEvent) => {
@@ -179,10 +183,10 @@ const MoviePlayerPage = () => {
         rating: commentRating,
       });
 
-  const updated: any = res.data;
-  setComments(updated.comments || []);
-  // preserve currently playing video's URL so playback doesn't stop if backend omits it
-  setMovie((prev) => ({ ...(updated || {}), videoUrl: prev?.videoUrl ?? updated?.videoUrl }));
+      const updated: any = res.data;
+      setComments(updated.comments || []);
+      // preserve currently playing video's URL so playback doesn't stop if backend omits it
+      setMovie((prev) => ({ ...(updated || {}), videoUrl: prev?.videoUrl ?? updated?.videoUrl }));
       setCommentText("");
       setCommentRating(4);
     } catch (err) {
@@ -193,33 +197,48 @@ const MoviePlayerPage = () => {
     }
   };
 
-
   if (!movie) return <p className="loading">Cargando película...</p>;
+
+  // Resolver src de track: si es relativa, prefija con VITE_API_URL; si es absoluta, déjala igual
+  const resolveTrack = (src: string) =>
+    /^https?:\/\//i.test(src)
+      ? src
+      : `${(import.meta.env.VITE_API_URL || "").replace(/\/+$/, "")}/${src.replace(/^\/+/, "")}`;
 
   return (
     <div className="movie-player-page">
       <Navbar />
 
       <div className="movie-player-container">
-        
         <h2>{movie.title}</h2>
 
         <div className="video-wrapper">
-  {movie.videoUrl ? (
-    <video
-      controls
-      autoPlay
-      src={movie.videoUrl}
-      className="video-player"
-    />
-  ) : (
-    <div className="video-placeholder">
-      <img src={movie.image} alt={movie.title} />
-      <p>Video no disponible</p>
-    </div>
-  )}
-</div>
-
+          {movie.videoUrl ? (
+            <video
+              controls
+              autoPlay
+              src={movie.videoUrl}  // NO se toca la lógica de video
+              className="video-player"
+              crossOrigin="anonymous"
+            >
+              {(movie.subtitles || []).map((t) => (
+                <track
+                  key={t.lang}
+                  kind="subtitles"
+                  src={resolveTrack(t.src)}
+                  srcLang={t.lang}
+                  label={t.label}
+                  default={!!t.default}
+                />
+              ))}
+            </video>
+          ) : (
+            <div className="video-placeholder">
+              <img src={movie.image} alt={movie.title} />
+              <p>Video no disponible</p>
+            </div>
+          )}
+        </div>
 
         <div className="actions">
           <button className="fav-btn" onClick={handleAddToFavorites}>
@@ -233,7 +252,6 @@ const MoviePlayerPage = () => {
         <div className="comments-section">
           <h3>COMENTARIOS</h3>
 
-          {/* Form to post a new comment (same markup/behavior as MoviesDetails) */}
           <form className="comment-form" onSubmit={handlePostComment}>
             <textarea
               placeholder="Escribe tu comentario..."
@@ -254,7 +272,7 @@ const MoviePlayerPage = () => {
                   <option value={5}>5</option>
                 </select>
               </label>
-              {/* use type="button" and onClick to avoid any unexpected native form navigation that may reload the page */}
+              {/* use type="button" and onClick to evitar recargas no deseadas */}
               <button type="button" className="btn btn--play" disabled={submittingComment} onClick={(e) => handlePostComment(e)}>
                 {submittingComment ? "Enviando..." : "Publicar comentario"}
               </button>
@@ -296,6 +314,6 @@ const MoviePlayerPage = () => {
     </div>
   );
 };
+
 //llamen a la policia
 export default MoviePlayerPage;
-
