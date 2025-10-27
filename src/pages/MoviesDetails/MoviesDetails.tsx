@@ -194,11 +194,8 @@ const MovieDetailPage = () => {
       <div className="movie-details-content">
         {/* 🎞️ Imagen / Video */}
         <div className="movie-left">
-          {movie.videoUrl ? (
-            <video controls src={movie.videoUrl} />
-          ) : (
-            <img src={movie.image} alt={movie.title} className="movie-poster" />
-          )}
+          {/* Always show the movie image, like MoviesPage featured cards */}
+          <img src={movie.image} alt={movie.title} className="movie-poster" />
           <h2 className="featured-title">{movie.title}</h2>
 
           {/*  Botón que navega al reproductor */}
@@ -212,9 +209,8 @@ const MovieDetailPage = () => {
           </div>
         </div>
 
-        {/*  Descripción */}
+        {/*  Descripción (sin repetir el título) */}
         <div className="movie-right">
-          <h3 className="movie-title">{movie.title}</h3>
           <div className="movie-desc">{movie.description || "Sin descripción disponible."}</div>
         </div>
       </div>
