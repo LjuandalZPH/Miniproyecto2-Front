@@ -10,7 +10,8 @@
 .movie-details-content {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  /* stretch columns so left and right boxes match height */
+  align-items: stretch;
   gap: 2rem;
   padding: 3rem 5%;
   background-color: #121212;
@@ -107,17 +108,16 @@
 
 /* --- SECCIÓN DERECHA (DETALLES Y DESCRIPCIÓN) --- */
 .movie-right {
-  flex: 1.5;
+  /* Make description box same width as left card */
+  flex: 0 0 360px;
+  max-width: 360px;
   background-color: #1f1f1f;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-
-  .movie-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* center description vertically to match left card layout */
 
   .movie-desc {
     font-size: 1rem;

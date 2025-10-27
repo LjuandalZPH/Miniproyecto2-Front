@@ -2,7 +2,6 @@ import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getProfile, getUserFavorites } from "../../services/authService";
 import "./MoviesPage.scss";
 import { resolveImageUrl } from "../../utils/images";
 
@@ -19,9 +18,7 @@ interface Movie {
 export const MoviesPage = () => {
   const navigate = useNavigate();
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [favorites, setFavorites] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadingFavs, setLoadingFavs] = useState(false);
   const [showGenres, setShowGenres] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
@@ -43,6 +40,7 @@ export const MoviesPage = () => {
 
     fetchMovies();
   }, []);
+
 
   // Fetch the user's favorites using the centralized helper
   useEffect(() => {
@@ -69,6 +67,7 @@ export const MoviesPage = () => {
     fetchFavorites();
   }, []);
 
+
   const handleMovieClick = (id: string) => {
     navigate(`/movies/${id}`);
   };
@@ -84,6 +83,9 @@ export const MoviesPage = () => {
         <section className="featured">
           <div className="featured__container">
             <div className="featured__content">
+              {movies[0].image && (
+                <img src={movies[0].image} alt={movies[0].title} className="featured__image" />
+              )}
               <h2 className="featured__title">{movies[0].title}</h2>
               <p className="featured__description">
                 {movies[0].description || "Sin descripción disponible"}
@@ -203,6 +205,7 @@ export const MoviesPage = () => {
           </div>
         </section>
 
+
         {/* Favoritos del usuario */}
         <section className="favorites-section">
           <h3>Tus Favoritos</h3>
@@ -239,8 +242,8 @@ export const MoviesPage = () => {
             <p>No tienes favoritos aún.</p>
           )}
         </section>
-      </main>
 
+      </main>
       <Footer />
     </div>
   );

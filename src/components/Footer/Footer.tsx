@@ -51,9 +51,8 @@ export const Footer = () => {
           <ul className="footer__links">
             <li><a href="/">Inicio</a></li>
             <li><a href="/movies">Películas</a></li>
-            <li><a href="/series">Series</a></li>
-            <li><a href="/new">Novedades</a></li>
-            <li><a href="/my-list">Mi Lista</a></li>
+            <li><a href="/movies">Novedades</a></li>
+            <li><a href="/favorites">Mi Lista</a></li>
           </ul>
         </div>
 
@@ -63,7 +62,7 @@ export const Footer = () => {
           <ul className="footer__links">
             <li><a href="/help">Manual de usuario</a></li>
             <li><a href="/about">Sobre nosotros</a></li>
-            <li><a href="/account">Cuenta</a></li>
+            <li><a href="/profile">Cuenta</a></li>
           </ul>
         </div>
       </div>
