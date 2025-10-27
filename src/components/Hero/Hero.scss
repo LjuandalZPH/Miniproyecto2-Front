@@ -1,0 +1,125 @@
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 95vh;  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  &__container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center top;
+    opacity: 0.8;             
+    filter: brightness(0.9);  
+    transform: scale(1.2);     
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 10, 10, 0.1) 0%,     
+      rgba(10, 10, 10, 0.6) 60%,    
+      rgba(10, 10, 10, 0.95) 100%    
+    );
+  }
+
+  &__content {
+    position: relative;
+    z-index: 10;
+    max-width: 800px;
+    padding: 2rem;
+    text-align: center;
+    margin-top: 15rem; 
+  }
+
+  &__title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    color: white;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+  }
+
+  &__description {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
+  }
+
+
+  &__cta {
+    background: #E50914;
+    color: white;
+    border: none;
+    padding: 1rem 3rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4);
+
+    &:hover {
+      background: #c40812;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(229, 9, 20, 0.6);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &__cta-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (max-width: 768px) {
+    min-height: 80vh; 
+
+    &__content {
+      margin-top: 8rem;
+    }
+
+    &__cta {
+      padding: 0.875rem 2rem;
+      font-size: 1rem;
+    }
+  }
+}

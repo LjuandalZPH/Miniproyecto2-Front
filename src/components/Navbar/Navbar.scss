@@ -1,0 +1,244 @@
+.navbar {
+  background-color: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  &__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @media (max-width: 950px) {
+      padding: 0.8rem 1rem;
+    }
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: white;
+    font-weight: 700;
+    font-size: 1.5rem;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    &-icon {
+      width: 32px;
+      height: 32px;
+
+      @media (max-width: 950px) {
+        width: 26px;
+        height: 26px;
+      }
+    }
+
+    &-text {
+      background: linear-gradient(135deg, #E50914 0%, #ff4757 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    gap: 2rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+
+    @media (max-width: 950px) {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background-color: rgba(20, 20, 20, 0.97);
+      flex-direction: column;
+      padding: 1.5rem 0;
+      gap: 1rem;
+      transform: translateY(-120%);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    &.active {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &__link,
+  &__auth-btn {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    position: relative;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      color: white;
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 15%;
+      right: 15%;
+      bottom: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #E50914, transparent);
+      border-radius: 2px;
+      opacity: 0;
+      transition: all 0.2s;
+    }
+  }
+
+  &__link--active,
+  &__auth-btn--active {
+    color: white;
+    background-color: rgba(229, 9, 20, 0.1);
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    @media (max-width: 950px) {
+      gap: 0.6rem;
+    }
+  }
+
+  &__icon-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: white;
+      background-color: rgba(255, 255, 255, 0.1);
+      transform: scale(1.1);
+    }
+  }
+
+  &__search-form {
+    position: relative;
+    margin-left: 0.7rem;
+    display: flex;
+    align-items: center;
+  }
+
+  &__search-input {
+    background: #222;
+    color: #fff;
+    border: 1.5px solid #E50914;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    width: 160px;
+    outline: none;
+    transition: border 0.2s;
+
+    &:focus {
+      border-color: #ff0800;
+      background: #181818;
+    }
+
+    @media (max-width: 950px) {
+      width: 120px;
+      font-size: 0.9rem;
+      padding: 0.4rem 0.7rem;
+    }
+  }
+
+  &__toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.7rem;
+    cursor: pointer;
+    padding: 0.3rem;
+
+    @media (max-width: 950px) {
+      display: block;
+    }
+  }
+}
+
+
+@media (max-width: 990px) {
+  .navbar__container {
+    padding: 0.8rem 1.2rem;
+  }
+
+  .navbar__logo-text {
+    font-size: 1.3rem;
+  }
+
+  .navbar__nav {
+    gap: 1rem;
+  }
+
+  .navbar__link,
+  .navbar__auth-btn {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.7rem;
+  }
+
+  .navbar__search-input {
+    width: 120px;
+  }
+}
+
+@media (max-width: 700px) {
+  .navbar__container {
+    padding: 1rem;
+  }
+
+  .navbar__nav {
+    gap: 0.5rem;
+  }
+
+  .navbar__link,
+  .navbar__auth-btn {
+    font-size: 0.9rem;
+  }
+
+  .navbar__search-input {
+    width: 110px;
+  }
+}

@@ -1,0 +1,221 @@
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #1e1e1e;
+  padding: 1rem;
+  position: relative;
+}
+.profile-page {
+  background-color: #121212;
+  min-height: 100vh;
+}
+
+.profile-card {
+  background-color: #3a3a3a;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  width: 350px;
+  text-align: center;
+  transition: 0.3s ease;
+  margin-top: -8rem;
+  break-inside: cover;
+
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+  }
+}
+
+.profile-avatar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+
+  img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #555;
+    object-fit: cover;
+  }
+}
+
+.profile-info {
+  text-align: left;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+
+  p {
+    margin: 6px 0;
+    font-size: 1rem;
+  }
+}
+
+.profile-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  margin-bottom: 1.5rem;
+
+  label {
+    font-weight: bold;
+    margin-top: 5px;
+  }
+
+  input {
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background-color: #555;
+    color: white;
+    font-size: 1rem;
+
+    &:focus {
+      background-color: #666;
+    }
+  }
+}
+
+.profile-buttons {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  button {
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+
+    &:hover {
+      background-color: darkred;
+    }
+  }
+
+  .save-btn {
+    background-color: #e60000; /* mismo tono que los otros */
+    &:hover {
+      background-color: #b30000;
+    }
+  }
+
+  .cancel-btn {
+    background-color: #444;
+    &:hover {
+      background-color: #333;
+    }
+  }
+}
+
+.home-btn {
+   position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 1.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: darkred;
+  }
+}
+.logout-btn {
+  background-color: red;
+  border: none;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+  margin-top: 1.5rem; /* 🔹 separa el botón del resto */
+  display: block;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+
+  &:hover {
+    background-color: darkred;
+  }
+}
+
+/* 🔹 Responsive Design */
+@media (max-width: 768px) {
+  .profile-card {
+    width: 90%;
+    padding: 1.5rem;
+  }
+
+  .profile-avatar img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-info p {
+    font-size: 0.95rem;
+  }
+
+  .profile-buttons {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    button {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      padding: 0.8rem;
+    }
+  }
+
+  .home-btn {
+   top: 10px;
+    left: 10px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-card {
+    width: 95%;
+    padding: 1rem;
+  }
+
+  .profile-info p {
+    font-size: 0.9rem;
+  }
+
+  .profile-avatar img {
+    width: 85px;
+    height: 85px;
+  }
+  .home-btn {
+    top: 8px;
+    left: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+
+
+
