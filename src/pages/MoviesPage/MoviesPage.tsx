@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getProfile, getUserFavorites } from "../../services/authService";
 import "./MoviesPage.scss";
+import { resolveImageUrl } from "../../utils/images";
 
 interface Movie {
   _id: string;
@@ -23,6 +24,7 @@ export const MoviesPage = () => {
   const [loadingFavs, setLoadingFavs] = useState(false);
   const [showGenres, setShowGenres] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+
   // Fetch all movies (simple list)
   useEffect(() => {
     const fetchMovies = async () => {
@@ -48,7 +50,7 @@ export const MoviesPage = () => {
       setLoadingFavs(true);
       try {
         const user = await getProfile();
-        const userId = user?._id || user?.id;
+        const userId = user?._id || (user as any)?.id;
         if (!userId) {
           setFavorites([]);
           return;
@@ -66,7 +68,6 @@ export const MoviesPage = () => {
 
     fetchFavorites();
   }, []);
-
 
   const handleMovieClick = (id: string) => {
     navigate(`/movies/${id}`);
@@ -109,74 +110,84 @@ export const MoviesPage = () => {
       <main className="movies-content">
         {/* Películas por género */}
         <section className="genre-section">
-            <h3>
-              <span className="tag">Género</span>
-              <div className="genre-filter">
-                <button
-                  className="genre-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowGenres((s) => !s);
-                  }}
-                >
-                  {selectedGenre ?? "Todas"} ▾
-                </button>
+          <h3>
+            <span className="tag">Género</span>
+            <div className="genre-filter">
+              <button
+                className="genre-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowGenres((s) => !s);
+                }}
+              >
+                {selectedGenre ?? "Todas"} ▾
+              </button>
 
-                {showGenres && (
-                  <div className="genre-list">
-                    <button
-                      className="genre-item"
-                      onClick={() => {
-                        setSelectedGenre(null);
-                        setShowGenres(false);
-                      }}
-                    >
-                      Todas
-                    </button>
-                    <button
-                      className="genre-item"
-                      onClick={() => {
-                        setSelectedGenre("Ciencia ficción");
-                        setShowGenres(false);
-                      }}
-                    >
-                      Ciencia ficción
-                    </button>
-                    <button
-                      className="genre-item"
-                      onClick={() => {
-                        setSelectedGenre("Documental");
-                        setShowGenres(false);
-                      }}
-                    >
-                      Documental
-                    </button>
-                    <button
-                      className="genre-item"
-                      onClick={() => {
-                        setSelectedGenre("Acción");
-                        setShowGenres(false);
-                      }}
-                    >
-                      Acción
-                    </button>
-                  </div>
-                )}
-              </div>
-              Películas disponibles
-            </h3>
+              {showGenres && (
+                <div className="genre-list">
+                  <button
+                    className="genre-item"
+                    onClick={() => {
+                      setSelectedGenre(null);
+                      setShowGenres(false);
+                    }}
+                  >
+                    Todas
+                  </button>
+                  <button
+                    className="genre-item"
+                    onClick={() => {
+                      setSelectedGenre("Ciencia ficción");
+                      setShowGenres(false);
+                    }}
+                  >
+                    Ciencia ficción
+                  </button>
+                  <button
+                    className="genre-item"
+                    onClick={() => {
+                      setSelectedGenre("Documental");
+                      setShowGenres(false);
+                    }}
+                  >
+                    Documental
+                  </button>
+                  <button
+                    className="genre-item"
+                    onClick={() => {
+                      setSelectedGenre("Acción");
+                      setShowGenres(false);
+                    }}
+                  >
+                    Acción
+                  </button>
+                </div>
+              )}
+            </div>
+            Películas disponibles
+          </h3>
           <div className="card-grid">
             {movies.length > 0 ? (
               // aplicar filtro por género en cliente
-              (selectedGenre ? movies.filter(m => (m.genre || '').toLowerCase() === selectedGenre.toLowerCase()) : movies)
-                .map((movie) => (
+              (selectedGenre
+                ? movies.filter(
+                    (m) => (m.genre || "").toLowerCase() === selectedGenre.toLowerCase()
+                  )
+                : movies
+              ).map((movie) => (
                 <div
                   key={movie._id}
                   className="card clickable"
                   onClick={() => handleMovieClick(movie._id)}
                 >
                   {movie.image ? (
-                    <img src={movie.image} alt={movie.title} />
+                    <img
+                      src={resolveImageUrl(movie.image)}
+                      alt={movie.title}
+                      onError={(e) => {
+                        e.currentTarget.src = resolveImageUrl(null);
+                      }}
+                    />
                   ) : (
                     <span>{movie.title}</span>
                   )}
@@ -207,7 +218,13 @@ export const MoviesPage = () => {
                   onClick={() => handleMovieClick(movie._id)}
                 >
                   {movie.image ? (
-                    <img src={movie.image} alt={movie.title} />
+                    <img
+                      src={resolveImageUrl(movie.image)}
+                      alt={movie.title}
+                      onError={(e) => {
+                        e.currentTarget.src = resolveImageUrl(null);
+                      }}
+                    />
                   ) : (
                     <span>{movie.title}</span>
                   )}
