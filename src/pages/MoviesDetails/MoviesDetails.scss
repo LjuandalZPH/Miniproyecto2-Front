@@ -10,9 +10,10 @@
 .movie-details-content {
   display: flex;
   justify-content: center;
-  /* stretch columns so left and right boxes match height */
-  align-items: stretch;
-  gap: 2rem;
+  /* Stack the right container below the left container */
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
   padding: 3rem 5%;
   background-color: #121212;
   border-radius: 12px;
@@ -22,14 +23,15 @@
 
 /* --- SECCIÓN IZQUIERDA (IMAGEN Y BOTONES) --- */
 .movie-left {
-  flex: 1;
-  max-width: 360px;
+  /* Make top container match the width of the bottom container */
+  width: 100%;
+  max-width: 760px;
   background-color: #1f1f1f;
   border-radius: 15px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  align-items: right;
+    align-items: center;
   text-align: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 
@@ -40,6 +42,10 @@
     margin-bottom: 1rem;
     background-color: #333;
     object-fit: cover;
+    /* constrain poster image so all cards look consistent */
+    max-width: 560px;
+    max-height: 420px;
+    height: auto;
   }
 
   .featured-title {
@@ -52,12 +58,16 @@
     background-color: #e50914;
     border: none;
     color: white;
-    padding: 0.6rem 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0 1.2rem;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     transition: 0.3s;
-    margin-bottom: 1rem;
+  margin-bottom: 0; /* remove extra bottom spacing so it aligns with fav button */
 
     &:hover {
       background-color: #b0060f;
@@ -69,55 +79,89 @@
   justify-content: center; /* centra el grupo en el eje horizontal */
   align-items: center;
   gap: 0.6rem;
-  margin-top: 0.8rem;
+  margin-top: 0; /* remove top offset so it lines up with Play button */
   position: relative;
-  left: 10px; /* 🔹 desplaza todo el grupo un poco hacia la derecha */
+  left: 0; /* keep centered */
 
-  .fav-btn {
-    background-color: #e50914;
-    border: none;
-    color: white;
-    padding: 0.6rem 1rem;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
+    .fav-btn {
+      background-color: #e50914;
+      border: none;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+      padding: 0 1.2rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      gap: 0.5rem;
+
+      &:hover {
+        background-color: #b0060f;
+      }
+    }
+
+    .fav-icon {
+      font-size: 1.2rem;
+      color: #555;
+      transition: color 0.3s ease;
+
+      &.active {
+        color: #f5c518;
+      }
+    }
+  }
+
+  /* Row to align Play and Favorite buttons horizontally */
+  .controls-row {
     display: flex;
     align-items: center;
     justify-content: center;
-
-    &:hover {
-      background-color: #b0060f;
-    }
+    gap: 1rem;
+    width: 100%;
   }
 
-  .fav-icon {
-    font-size: 1.4rem;
-    color: #555;
-    transition: color 0.3s ease;
-    margin-top: 2px;
+  /* ensure both controls share visual height when next to each other */
+  .controls-row .play-btn,
+  .controls-row .fav-btn {
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
-    &.active {
-      color: #f5c518;
+  /* Responsive: stack controls vertically on very narrow screens */
+  @media (max-width: 420px) {
+    .controls-row {
+      flex-direction: column;
+      gap: 0.6rem;
     }
   }
-}
 
 
 }
 
 /* --- SECCIÓN DERECHA (DETALLES Y DESCRIPCIÓN) --- */
 .movie-right {
-  /* Make description box same width as left card */
-  flex: 0 0 360px;
-  max-width: 360px;
+  /* Right container appears below the left; keep same visual card styling */
+  width: 100%;
+  max-width: 760px;
   background-color: #1f1f1f;
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
-  justify-content: center; /* center description vertically to match left card layout */
+  align-items: flex-start;
+  gap: 0.75rem;
+
+  .movie-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+  }
 
   .movie-desc {
     font-size: 1rem;
@@ -267,14 +311,13 @@
 /* --- RESPONSIVE --- */
 @media (max-width: 900px) {
   .movie-details-content {
-    flex-direction: column;
-    align-items: center;
+    /* already stacked by default; keep spacing smaller on narrow screens */
+    gap: 1rem;
   }
 
   .movie-right {
     width: 100%;
   }
-
   .movie-left {
     width: 100%;
     max-width: 400px;

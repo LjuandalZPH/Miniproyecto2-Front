@@ -16,7 +16,9 @@
     &__image {
       display: block;
       width: 100%;
-      max-width: 720px; /* limit featured image width */
+      /* make featured image a medium standard size */
+      max-width: 420px;
+      max-height: 480px;
       height: auto;
       border-radius: 10px;
       object-fit: cover;
@@ -157,20 +159,46 @@
 
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      /* keep a reasonable max width per card so single results don't stretch full width */
+      grid-template-columns: repeat(auto-fit, minmax(160px, 260px));
       gap: 1rem;
+      justify-content: center; /* center cards when there's extra space */
+      /* Ensure each grid cell in the row gets the same height */
+      align-items: stretch;
+      grid-auto-rows: 1fr;
 
       .card {
         background-color: #222;
         border-radius: 8px;
-        padding: 1.5rem;
+        padding: 1rem;
+        max-width: 260px; /* limit card width so single-item grids appear as a box */
         text-align: center;
         cursor: pointer;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%; /* fill the grid row */
+        min-height: 240px; /* ensure stable card height even with little content (search results) */
 
         &:hover {
           transform: scale(1.05);
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Make images consistent height and avoid stretching */
+        img {
+          width: 100%;
+          height: 160px;
+          object-fit: cover;
+          border-radius: 6px;
+          margin-bottom: 0.75rem;
+        }
+
+        /* Ensure overlay (title/genre) stays at the bottom if content grows */
+        .card-overlay {
+          margin-top: auto;
+          padding-top: 0.5rem;
         }
       }
     }
@@ -253,8 +281,12 @@
     }
   }
   .card.clickable {
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex; /* ensure clickable variant also fills the grid cell */
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
 
 .card.clickable:hover {
