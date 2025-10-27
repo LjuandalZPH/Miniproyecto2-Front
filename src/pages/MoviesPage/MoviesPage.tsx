@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./MoviesPage.scss";
 import { resolveImageUrl } from "../../utils/images";
+import { getProfile, getUserFavorites } from "../../services/authService";
 
 interface Movie {
   _id: string;
@@ -18,7 +19,9 @@ interface Movie {
 export const MoviesPage = () => {
   const navigate = useNavigate();
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [favorites, setFavorites] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingFavs, setLoadingFavs] = useState(false);
   const [showGenres, setShowGenres] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
@@ -41,21 +44,25 @@ export const MoviesPage = () => {
     fetchMovies();
   }, []);
 
-
   // Fetch the user's favorites using the centralized helper
   useEffect(() => {
     const fetchFavorites = async () => {
       setLoadingFavs(true);
       try {
         const user = await getProfile();
-        const userId = user?._id || (user as any)?.id;
+        const userId = (user as any)?._id || (user as any)?.id;
         if (!userId) {
           setFavorites([]);
           return;
         }
 
-        const favs: Movie[] = await getUserFavorites(userId);
-        setFavorites(favs || []);
+        const favs = (await getUserFavorites(userId)) as unknown as Movie[] | string[];
+        if (Array.isArray(favs)) {
+          const isStringArray = favs.every((f) => typeof f === "string");
+          setFavorites(isStringArray ? [] : (favs as Movie[]));
+        } else {
+          setFavorites([]);
+        }
       } catch (error) {
         console.error("Error cargando favoritos:", error);
         setFavorites([]);
@@ -66,7 +73,6 @@ export const MoviesPage = () => {
 
     fetchFavorites();
   }, []);
-
 
   const handleMovieClick = (id: string) => {
     navigate(`/movies/${id}`);
@@ -84,7 +90,14 @@ export const MoviesPage = () => {
           <div className="featured__container">
             <div className="featured__content">
               {movies[0].image && (
-                <img src={movies[0].image} alt={movies[0].title} className="featured__image" />
+                <img
+                  src={resolveImageUrl(movies[0].image)}
+                  alt={movies[0].title}
+                  className="featured__image"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = resolveImageUrl(null);
+                  }}
+                />
               )}
               <h2 className="featured__title">{movies[0].title}</h2>
               <p className="featured__description">
@@ -173,10 +186,11 @@ export const MoviesPage = () => {
               // aplicar filtro por género en cliente
               (selectedGenre
                 ? movies.filter(
-                    (m) => (m.genre || "").toLowerCase() === selectedGenre.toLowerCase()
+                    (m: Movie) =>
+                      (m.genre || "").toLowerCase() === selectedGenre.toLowerCase()
                   )
                 : movies
-              ).map((movie) => (
+              ).map((movie: Movie) => (
                 <div
                   key={movie._id}
                   className="card clickable"
@@ -187,7 +201,7 @@ export const MoviesPage = () => {
                       src={resolveImageUrl(movie.image)}
                       alt={movie.title}
                       onError={(e) => {
-                        e.currentTarget.src = resolveImageUrl(null);
+                        (e.currentTarget as HTMLImageElement).src = resolveImageUrl(null);
                       }}
                     />
                   ) : (
@@ -205,7 +219,6 @@ export const MoviesPage = () => {
           </div>
         </section>
 
-
         {/* Favoritos del usuario */}
         <section className="favorites-section">
           <h3>Tus Favoritos</h3>
@@ -214,7 +227,7 @@ export const MoviesPage = () => {
             <p className="loading">Cargando favoritos...</p>
           ) : favorites.length > 0 ? (
             <div className="card-grid">
-              {favorites.map((movie) => (
+              {favorites.map((movie: Movie) => (
                 <div
                   key={movie._id}
                   className="card clickable"
@@ -225,7 +238,7 @@ export const MoviesPage = () => {
                       src={resolveImageUrl(movie.image)}
                       alt={movie.title}
                       onError={(e) => {
-                        e.currentTarget.src = resolveImageUrl(null);
+                        (e.currentTarget as HTMLImageElement).src = resolveImageUrl(null);
                       }}
                     />
                   ) : (
@@ -242,8 +255,8 @@ export const MoviesPage = () => {
             <p>No tienes favoritos aún.</p>
           )}
         </section>
-
       </main>
+
       <Footer />
     </div>
   );
