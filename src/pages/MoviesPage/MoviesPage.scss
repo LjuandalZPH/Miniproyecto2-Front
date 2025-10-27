@@ -13,6 +13,16 @@
     margin: 2rem;
     text-align: center;
 
+    &__image {
+      display: block;
+      width: 100%;
+      max-width: 720px; /* limit featured image width */
+      height: auto;
+      border-radius: 10px;
+      object-fit: cover;
+      margin: 0 auto 1rem;
+    }
+
     &__title {
       font-size: 2rem;
       margin-bottom: 0.5rem;

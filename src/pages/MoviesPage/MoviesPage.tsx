@@ -2,7 +2,6 @@ import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getProfile, getUserFavorites } from "../../services/authService";
 import "./MoviesPage.scss";
 
 interface Movie {
@@ -18,9 +17,7 @@ interface Movie {
 export const MoviesPage = () => {
   const navigate = useNavigate();
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [favorites, setFavorites] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadingFavs, setLoadingFavs] = useState(false);
   const [showGenres, setShowGenres] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
   // Fetch all movies (simple list)
@@ -42,31 +39,6 @@ export const MoviesPage = () => {
     fetchMovies();
   }, []);
 
-  // Fetch the user's favorites using the centralized helper
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      setLoadingFavs(true);
-      try {
-        const user = await getProfile();
-        const userId = user?._id || user?.id;
-        if (!userId) {
-          setFavorites([]);
-          return;
-        }
-
-        const favs: Movie[] = await getUserFavorites(userId);
-        setFavorites(favs || []);
-      } catch (error) {
-        console.error("Error cargando favoritos:", error);
-        setFavorites([]);
-      } finally {
-        setLoadingFavs(false);
-      }
-    };
-
-    fetchFavorites();
-  }, []);
-
 
   const handleMovieClick = (id: string) => {
     navigate(`/movies/${id}`);
@@ -83,6 +55,9 @@ export const MoviesPage = () => {
         <section className="featured">
           <div className="featured__container">
             <div className="featured__content">
+              {movies[0].image && (
+                <img src={movies[0].image} alt={movies[0].title} className="featured__image" />
+              )}
               <h2 className="featured__title">{movies[0].title}</h2>
               <p className="featured__description">
                 {movies[0].description || "Sin descripción disponible"}
@@ -191,39 +166,7 @@ export const MoviesPage = () => {
             )}
           </div>
         </section>
-
-        {/* Favoritos del usuario */}
-        <section className="favorites-section">
-          <h3>Tus Favoritos</h3>
-
-          {loadingFavs ? (
-            <p className="loading">Cargando favoritos...</p>
-          ) : favorites.length > 0 ? (
-            <div className="card-grid">
-              {favorites.map((movie) => (
-                <div
-                  key={movie._id}
-                  className="card clickable"
-                  onClick={() => handleMovieClick(movie._id)}
-                >
-                  {movie.image ? (
-                    <img src={movie.image} alt={movie.title} />
-                  ) : (
-                    <span>{movie.title}</span>
-                  )}
-                  <div className="card-overlay">
-                    <h4>{movie.title}</h4>
-                    <p>{movie.genre}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p>No tienes favoritos aún.</p>
-          )}
-        </section>
       </main>
-
       <Footer />
     </div>
   );
