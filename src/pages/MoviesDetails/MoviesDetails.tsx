@@ -21,6 +21,7 @@ interface Movie {
   image: string;
   videoUrl?: string;
   genre?: string;
+  rating?: number
 }
 
 const MovieDetailPage = () => {
@@ -211,6 +212,8 @@ const MovieDetailPage = () => {
 
         {/*  Descripción (sin repetir el título) */}
         <div className="movie-right">
+          <h3 className="movie-title">{movie.title}</h3>
+          <p className="movie-rating">Promedio: {movie.rating?.toFixed(1) ?? 0}/5</p>
           <div className="movie-desc">{movie.description || "Sin descripción disponible."}</div>
         </div>
       </div>
