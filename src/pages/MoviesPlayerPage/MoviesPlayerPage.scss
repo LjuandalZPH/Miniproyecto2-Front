@@ -24,6 +24,10 @@
     /* 🎥 CONTENEDOR DEL VIDEO */
     .video-wrapper {
       width: 100%;
+      /* constrain video area so it doesn't fill entire viewport */
+      max-width: 900px;
+      max-height: 540px; /* ~16:9 */
+      margin: 0 auto;
       background-color: #1a1a1a;
       border-radius: 12px;
       overflow: hidden;
@@ -32,7 +36,10 @@
       video,
       .video-placeholder {
         width: 100%;
+        height: auto;
+        max-height: 540px;
         border-radius: 12px;
+        display: block;
       }
 
       .video-placeholder {
@@ -43,9 +50,33 @@
         padding: 2rem;
 
         img {
-          max-width: 70%;
+          max-width: 100%;
+          width: 100%;
+          height: auto;
+          object-fit: cover;
           border-radius: 10px;
           margin-bottom: 1rem;
+          max-height: 420px;
+        }
+      }
+
+      /* Responsive: reduce max size on smaller screens */
+      @media (max-width: 1024px) {
+        max-width: 760px;
+        max-height: 460px;
+        video, .video-placeholder {
+          max-height: 460px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        max-width: 100%;
+        max-height: 360px;
+        video, .video-placeholder {
+          max-height: 360px;
+        }
+        .video-placeholder {
+          padding: 1rem;
         }
       }
     }

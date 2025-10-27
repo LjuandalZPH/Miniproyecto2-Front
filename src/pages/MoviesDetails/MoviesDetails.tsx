@@ -199,20 +199,22 @@ const MovieDetailPage = () => {
           <img src={movie.image} alt={movie.title} className="movie-poster" />
           <h2 className="featured-title">{movie.title}</h2>
 
-          {/*  Botón que navega al reproductor */}
-          <button className="play-btn" onClick={handlePlayNow}>▶ Play Now</button>
+          {/* Controls: Play + Favorite on same row */}
+          <div className="controls-row">
+            <button className="play-btn" onClick={handlePlayNow}>▶ Play Now</button>
 
-          <div className="fav-section">
-            <button className="fav-btn" onClick={handleAddToFavorites}>
-              {isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
-            </button>
-            <FaStar className={`fav-icon ${isFavorite ? "active" : ""}`} />
+            <div className="fav-section">
+              <button className="fav-btn" onClick={handleAddToFavorites}>
+                {isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
+                <FaStar className={`fav-icon ${isFavorite ? "active" : ""}`} />
+              </button>
+            </div>
           </div>
+          {/* description remains in the right container; removed from left */}
         </div>
 
         {/*  Descripción (sin repetir el título) */}
         <div className="movie-right">
-          <h3 className="movie-title">{movie.title}</h3>
           <p className="movie-rating">Promedio: {movie.rating?.toFixed(1) ?? 0}/5</p>
           <div className="movie-desc">{movie.description || "Sin descripción disponible."}</div>
         </div>
