@@ -10,6 +10,7 @@ import ChangePasswordPage from "../pages/ChangePasswordPage/ChangePasswordPage";
 import MovieDetailPage from '../pages/MoviesDetails/MoviesDetails';
 import MoviePlayerPage from "../pages/MoviesPlayerPage/MoviesPlayerPage"; 
 import FavoritesPage from '../pages/FavoritesPage/FavoritesPage';
+import  UserManualPage  from "../pages/UserManual/UserManualPage";
 
 /**
  * AppRoutes
@@ -45,6 +46,7 @@ export const AppRoutes = () => (
       <Route path="/watch/:id" element={<MoviePlayerPage />} /> 
       {/* User favorites and collections */}
       <Route path="/favorites" element={<FavoritesPage />} />
+      <Route path="/manual" element={<UserManualPage />} />
     </Routes>
   </BrowserRouter>
 );

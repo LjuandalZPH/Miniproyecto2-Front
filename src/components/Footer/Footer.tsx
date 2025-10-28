@@ -84,7 +84,7 @@ export const Footer = () => {
         <div className="footer__section">
           <h3 className="footer__title">Soporte</h3>
           <ul className="footer__links">
-            <li><a href="/help">Manual de usuario</a></li>
+            <li><a href="/Manual">Manual de usuario</a></li>
             <li><a href="/about">Sobre nosotros</a></li>
             <li><a href="/profile">Cuenta</a></li>
           </ul>
