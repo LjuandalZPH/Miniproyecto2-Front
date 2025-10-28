@@ -74,22 +74,22 @@ export const getProfile = async () => {
  * @throws Error when the response is not ok
  */
 export const updateUser = async (id: string, updatedData: any) => {
-  const token = localStorage.getItem("token");
+  try {
+    // Asegurarnos de que la contraseña se envía correctamente si existe
+    const dataToSend = {
+      ...updatedData,
+      // Si hay contraseña, asegurarnos de que se envía como un campo específico
+      ...(updatedData.password && { password: updatedData.password.trim() })
+    };
 
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(updatedData),
-  });
+    console.log('Datos a actualizar:', dataToSend); // Para debugging
 
-  if (!response.ok) {
-    throw new Error("Error al actualizar usuario");
+    const res = await api.put(`/api/users/${id}`, dataToSend);
+    return res.data;
+  } catch (error: any) {
+    console.error("Error al actualizar usuario:", error);
+    throw error.response?.data || { message: "Error al actualizar usuario" };
   }
-
-  return await response.json();
 };
 
 /**

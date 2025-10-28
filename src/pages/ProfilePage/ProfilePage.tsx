@@ -16,6 +16,7 @@ import { deleteUser } from "../../services/authService";
  * @property {string} [email] - Email address
  */
 interface UserProfile {
+  password?: string;
   id?: string;
   firstName?: string;
   lastName?: string;
@@ -46,6 +47,7 @@ const ProfilePage: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   /** Local state for edited values while in edit mode */
   const [editedUser, setEditedUser] = useState<UserProfile>({});
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     /**
@@ -62,6 +64,7 @@ const ProfilePage: React.FC = () => {
           lastName: u.lastName,
           age: u.age,
           email: u.email,
+          password: u.password,
         });
       } catch (err: any) {
         console.error("Error al obtener perfil:", err);
@@ -88,18 +91,31 @@ const ProfilePage: React.FC = () => {
   const handleSave = async () => {
     if (!user?.id) return;
     try {
-      const updated = await updateUser(user.id, editedUser);
+      const dataToUpdate = {
+        ...editedUser,
+        ...(editedUser.password ? { password: editedUser.password } : {})
+      };
+
+      const updated = await updateUser(user.id, dataToUpdate);
       console.log("Respuesta del backend:", updated);
+
+      if (editedUser.password) {
+        alert("Contraseña actualizada correctamente. Por favor, vuelve a iniciar sesión.");
+        handleLogout();
+        return;
+      }
 
       if (updated?.user) {
         const u = updated.user;
-        setUser({
+        const updatedUser = {
           id: u._id ?? u.id,
           firstName: u.firstName,
           lastName: u.lastName,
           age: u.age,
           email: u.email,
-        });
+          password: u.password,
+        };
+        setUser(updatedUser);
       }
 
       setIsEditing(false);
@@ -242,6 +258,23 @@ const ProfilePage: React.FC = () => {
                     setEditedUser({ ...editedUser, age: Number(e.target.value) })
                   }
                 />
+
+                <label>Nueva contraseña</label>
+                  <div className="password-field">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={editedUser.password ?? ""}
+                    onChange={(e) => setEditedUser({ ...editedUser, password: e.target.value })}
+                  />
+                <button
+                type="button"
+                className="toggle-pass-btn"
+                onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? "Ocultar" : "Ver"}
+                </button>
+                  </div>
               </form>
 
               <div className="profile-buttons">
