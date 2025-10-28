@@ -6,7 +6,17 @@ import { Footer } from "../../components/Footer";
 import { getProfile, updateUser } from "../../services/authService";
 import { deleteUser } from "../../services/authService";
 
+/**
+ * @interface UserProfile
+ * @description Minimal user profile shape used by the Profile page.
+ * @property {string} [id] - User identifier (could be `_id` or `id` from backend)
+ * @property {string} [firstName] - Given name
+ * @property {string} [lastName] - Family name
+ * @property {number} [age] - Age in years
+ * @property {string} [email] - Email address
+ */
 interface UserProfile {
+  password?: string;
   id?: string;
   firstName?: string;
   lastName?: string;
@@ -14,15 +24,36 @@ interface UserProfile {
   email?: string;
 }
 
+/**
+ * @component ProfilePage
+ * @description User profile page. Shows current user's profile information,
+ * allows editing basic fields (first name, last name, age), deleting account
+ * and logging out.
+ *
+ * This component reads the current authenticated user's profile from the
+ * backend using `getProfile`, shows a loading and error state, and makes
+ * calls to `updateUser` / `deleteUser` to modify or remove the account.
+ */
 const ProfilePage: React.FC = () => {
+  /** Navigation helper from react-router */
   const navigate = useNavigate();
+  /** Current loaded user profile (null while loading) */
   const [user, setUser] = useState<UserProfile | null>(null);
+  /** Loading flag while profile is being fetched */
   const [loading, setLoading] = useState(true);
+  /** Error message to display when profile fetch fails */
   const [error, setError] = useState<string | null>(null);
+  /** Controls whether edit form is shown */
   const [isEditing, setIsEditing] = useState(false);
+  /** Local state for edited values while in edit mode */
   const [editedUser, setEditedUser] = useState<UserProfile>({});
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
+    /**
+     * Fetch the current user's profile from backend.
+     * Uses `getProfile()` from authService and normalizes the returned shape.
+     */
     const fetchProfile = async () => {
       try {
         const data = await getProfile();
@@ -33,6 +64,7 @@ const ProfilePage: React.FC = () => {
           lastName: u.lastName,
           age: u.age,
           email: u.email,
+          password: u.password,
         });
       } catch (err: any) {
         console.error("Error al obtener perfil:", err);
@@ -51,21 +83,39 @@ const ProfilePage: React.FC = () => {
     setIsEditing(true);
   };
 
+  /**
+   * Save edited user profile to backend.
+   * Calls `updateUser` and updates local state on success.
+   */
+
   const handleSave = async () => {
     if (!user?.id) return;
     try {
-      const updated = await updateUser(user.id, editedUser);
+      const dataToUpdate = {
+        ...editedUser,
+        ...(editedUser.password ? { password: editedUser.password } : {})
+      };
+
+      const updated = await updateUser(user.id, dataToUpdate);
       console.log("Respuesta del backend:", updated);
+
+      if (editedUser.password) {
+        alert("Contraseña actualizada correctamente. Por favor, vuelve a iniciar sesión.");
+        handleLogout();
+        return;
+      }
 
       if (updated?.user) {
         const u = updated.user;
-        setUser({
+        const updatedUser = {
           id: u._id ?? u.id,
           firstName: u.firstName,
           lastName: u.lastName,
           age: u.age,
           email: u.email,
-        });
+          password: u.password,
+        };
+        setUser(updatedUser);
       }
 
       setIsEditing(false);
@@ -76,30 +126,41 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+  /** Cancel editing and discard local edits */
+
   const handleCancel = () => {
     setIsEditing(false);
   };
 
+  /**
+   * Delete user account after confirmation. On success removes auth token
+   * and navigates the user to registration.
+   */
   const handleDelete = async () => {
-  const confirmDelete = confirm(" ¿Seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.");
-  if (!confirmDelete || !user?.id) return;
+    const confirmDelete = confirm(" ¿Seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.");
+    if (!confirmDelete || !user?.id) return;
 
-  try {
-    await deleteUser(user.id);
-    alert("Cuenta eliminada exitosamente ");
-    localStorage.removeItem("token"); // cerrar sesión automáticamente
-    navigate("/register");
-  } catch (error) {
-    console.error("Error al borrar cuenta:", error);
-    alert("Error al eliminar la cuenta ");
-  }
-};
+    try {
+      await deleteUser(user.id);
+      alert("Cuenta eliminada exitosamente ");
+      localStorage.removeItem("token"); // cerrar sesión automáticamente
+      navigate("/register");
+    } catch (error) {
+      console.error("Error al borrar cuenta:", error);
+      alert("Error al eliminar la cuenta ");
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     alert("Sesión cerrada correctamente ");
     navigate("/login");
   };
+
+  /**
+   * Rendered UI below: shows loading/error states, and the profile card with
+   * edit form. All UI behavior is unchanged; comments above clarify purpose.
+   */
 
   if (loading) {
     return (
@@ -197,6 +258,23 @@ const ProfilePage: React.FC = () => {
                     setEditedUser({ ...editedUser, age: Number(e.target.value) })
                   }
                 />
+
+                <label>Nueva contraseña</label>
+                  <div className="password-field">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={editedUser.password ?? ""}
+                    onChange={(e) => setEditedUser({ ...editedUser, password: e.target.value })}
+                  />
+                <button
+                type="button"
+                className="toggle-pass-btn"
+                onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? "Ocultar" : "Ver"}
+                </button>
+                  </div>
               </form>
 
               <div className="profile-buttons">

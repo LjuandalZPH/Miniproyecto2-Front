@@ -1,16 +1,38 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./MoviesDetails.scss";
-import { FaStar } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
+import { getProfile, toggleFavorite, getUserFavorites } from "../../services/authService";
+import api from "../../services/api";
 
+/**
+ * @interface Comment
+ * @description Interface for movie comments
+ * @property {string} user - Name or identifier of the comment author
+ * @property {string} text - Content of the comment
+ * @property {number} rating - User rating (1-5 stars)
+ * @property {string} [_id] - Optional unique identifier for the comment
+ */
 interface Comment {
   user: string;
   text: string;
   rating: number;
+  _id?: string;
 }
 
+/**
+ * @interface Movie
+ * @description Interface for movie details
+ * @property {string} _id - Unique identifier for the movie
+ * @property {string} title - Movie title
+ * @property {string} description - Movie description or synopsis
+ * @property {string} image - URL to movie poster image
+ * @property {string} [videoUrl] - Optional URL to movie video content
+ * @property {string} [genre] - Optional movie genre
+ * @property {number} [rating] - Optional average rating (1-5 stars)
+ */
 interface Movie {
   _id: string;
   title: string;
@@ -18,17 +40,70 @@ interface Movie {
   image: string;
   videoUrl?: string;
   genre?: string;
+  rating?: number
 }
 
+/**
+ * @component MovieDetailPage
+ * @description Detailed view page for a single movie. Shows movie information,
+ * handles favorites, and manages user comments and ratings.
+ * 
+ * Features:
+ * - Displays movie details (title, image, description)
+ * - Manages favorite status
+ * - Handles user comments and ratings
+ * - Provides video playback navigation
+ * - Supports comment deletion for owners
+ * - Real-time rating updates
+ * 
+ * @example
+ * ```tsx
+ * <Route path="/movies/:id" element={<MovieDetailPage />} />
+ * ```
+ */
 const MovieDetailPage = () => {
+  /** @const {string} Movie ID from URL parameters */
   const { id } = useParams<{ id: string }>();
+  
+  /** @state {Movie | null} Current movie details */
   const [movie, setMovie] = useState<Movie | null>(null);
+  
+  /** @state {Comment[]} List of movie comments */
   const [comments, setComments] = useState<Comment[]>([]);
+  
+  /** @state {string} New comment text input */
+  const [commentText, setCommentText] = useState("");
+  
+  /** @state {number} New comment rating selection */
+  const [commentRating, setCommentRating] = useState<number>(4);
+  
+  /** @state {boolean} Loading state for comment submission */
+  const [submittingComment, setSubmittingComment] = useState(false);
+  
+  /** @state {string | null} Current authenticated user's name */
+  const [currentUserName, setCurrentUserName] = useState<string | null>(null);
+  
+  /** @state {string | null} ID of comment being deleted */
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  
+  /** @const {Function} Navigation function from react-router-dom */
   const navigate = useNavigate();
 
    
+  /**
+   * Effect hook to fetch movie details when component mounts or ID changes
+   * @effect
+   * @fires setMovie - Updates movie details
+   * @fires setIsFavorite - Updates favorite status
+   * @fires setComments - Updates comment list
+   */
   useEffect(() => {
-  const fetchMovie = async () => {
+    /**
+     * Fetches movie details from the API
+     * @async
+     * @function fetchMovie
+     */
+    const fetchMovie = async () => {
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/movies/${id}`);
       if (!res.ok) throw new Error("Error al obtener los datos de la película");
@@ -44,44 +119,119 @@ const MovieDetailPage = () => {
 
   fetchMovie();
 }, [id]);
-  
-/*
-  // 🔹 Simulación de carga (sin backend)
-  useEffect(() => {
-    setTimeout(() => {
-      setMovie({
-        _id: id || "1",
-        title: `Película de prueba ${id}`,
-        description: "Esta es una descripción simulada para probar la vista MovieDetailPage.",
-        image: "/MoovieWithoutBackground.png",
-        videoUrl: "",
-        genre: "Acción",
-      });
-    }, 800);
 
-    // 🔹 Comentarios simulados
-    setComments([
-      { user: "John Doe", text: "Excelente película", rating: 5 },
-      { user: "Jane Smith", text: "Entretenida, pero algo lenta", rating: 3 },
-    ]);
-  }, [id]);
-*/
+  // load current user display name to check ownership of comments
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const user = await getProfile();
+        const userName = (user?.firstName ? `${user.firstName} ${user.lastName ?? ""}`.trim() : user?.email) || null;
+        setCurrentUserName(userName);
+      } catch (err) {
+        // not authenticated or error - ignore
+        setCurrentUserName(null);
+      }
+    };
+    loadUser();
+  }, []);
+
+  // Handler to post a new comment
+  /**
+   * Handles posting a new comment to the movie
+   * @async
+   * @function handlePostComment
+   * @param {React.FormEvent} [e] - Optional form submission event
+   * @fires setComments - Updates comments list with new comment
+   * @fires setMovie - Updates movie details (rating might change)
+   * @fires setCommentText - Clears comment input
+   * @fires setCommentRating - Resets rating selection
+   */
+  const handlePostComment = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!movie) return;
+    if (!commentText.trim()) {
+      alert("Escribe un comentario antes de publicar.");
+      return;
+    }
+
+    try {
+      setSubmittingComment(true);
+
+      const user = await getProfile();
+      const userName = (user?.firstName ? `${user.firstName} ${user.lastName ?? ""}`.trim() : user?.email) || "Usuario";
+
+      const res = await api.post(`/api/movies/${movie._id}/comments`, {
+        user: userName,
+        text: commentText.trim(),
+        rating: commentRating,
+      });
+
+      const updated: any = res.data;
+      // update local state with new comments and movie (rating may change)
+      setComments(updated.comments || []);
+      setMovie(updated);
+      setCommentText("");
+      setCommentRating(4);
+    } catch (err) {
+      console.error("Error publicando comentario:", err);
+      alert("No se pudo publicar el comentario.");
+    } finally {
+      setSubmittingComment(false);
+    }
+  };
+
+  // Favorite handling
+  useEffect(() => {
+    const checkIfFavorite = async () => {
+      if (!movie) return;
+      try {
+        const user = await getProfile();
+        const userId = user?._id || user?.id;
+        if (!userId) return;
+
+        const favs = await getUserFavorites(userId);
+        if (!Array.isArray(favs)) {
+          setIsFavorite(false);
+          return;
+        }
+
+        const has = favs.some((f: any) => {
+          if (!f) return false;
+          if (typeof f === 'string') return f === movie._id;
+          if (typeof f === 'object') return (f._id ?? f.id) === movie._id;
+          return false;
+        });
+
+        setIsFavorite(has);
+      } catch (err) {
+        console.error('Error comprobando favorito:', err);
+      }
+    };
+
+    checkIfFavorite();
+  }, [movie]);
+  
   const [isFavorite, setIsFavorite] = useState(false);
 
+  /**
+   * Toggles the favorite status of the movie for the current user
+   * @async
+   * @function handleAddToFavorites
+   * @fires toggleFavorite - API call to update favorite status
+   * @fires setIsFavorite - Updates local favorite state
+   */
   const handleAddToFavorites = async () => {
   if (!movie) return;
 
   try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/movies/${movie._id}/favorite`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const user = await getProfile();
+    const userId = user?._id || user?.id;
+    if (!userId) throw new Error("Usuario no autenticado");
 
-    if (!res.ok) throw new Error("Error al actualizar favorito");
+    // Llamamos al endpoint centralizado que alterna el favorito
+    await toggleFavorite(userId, movie._id);
 
-    //  Cambiamos el estado local para reflejar el nuevo valor
+    // Actualizamos estado local
     setIsFavorite((prev) => !prev);
   } catch (error) {
     console.error("Error al marcar favorito:", error);
@@ -89,7 +239,47 @@ const MovieDetailPage = () => {
   }
 };
 
+  // Delete a comment (only allowed for the comment owner)
+  /**
+   * Deletes a comment from the movie (only available to comment owner)
+   * @async
+   * @function handleDeleteComment
+   * @param {string} commentId - ID of the comment to delete
+   * @fires setMovie - Updates movie with new comment list
+   * @fires setComments - Updates comments list
+   * @fires setDeletingId - Manages loading state for deletion
+   */
+  const handleDeleteComment = async (commentId: string) => {
+    if (!movie) return;
+    if (!commentId) return;
+
+    try {
+      setDeletingId(commentId);
+      const res = await api.delete(`/api/movies/${movie._id}/comments/${commentId}`);
+      const data = res.data;
+      // controller returns { message: 'Comment deleted', movie }
+      const updatedMovie = data.movie ?? data;
+      setMovie(updatedMovie);
+      setComments(updatedMovie.comments || []);
+    } catch (err) {
+      // Show detailed server error when available
+      console.error('Error borrando comentario:', err);
+      // Axios error may contain response data with message
+      const anyErr: any = err;
+      const serverMsg = anyErr?.response?.data?.error ?? anyErr?.response?.data?.message ?? anyErr?.message;
+      console.error('Server response:', anyErr?.response?.data);
+      alert(serverMsg || 'No se pudo borrar el comentario');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   
+  /**
+   * Navigates to the movie playback page
+   * @function handlePlayNow
+   * @fires navigate - Redirects to /watch/:id
+   */
   const handlePlayNow = () => {
     navigate(`/watch/${movie?._id}`);
   };
@@ -102,27 +292,27 @@ const MovieDetailPage = () => {
       <div className="movie-details-content">
         {/* 🎞️ Imagen / Video */}
         <div className="movie-left">
-          {movie.videoUrl ? (
-            <video controls src={movie.videoUrl} />
-          ) : (
-            <img src={movie.image} alt={movie.title} className="movie-poster" />
-          )}
+          {/* Always show the movie image, like MoviesPage featured cards */}
+          <img src={movie.image} alt={movie.title} className="movie-poster" />
           <h2 className="featured-title">{movie.title}</h2>
 
-          {/*  Botón que navega al reproductor */}
-          <button className="play-btn" onClick={handlePlayNow}>▶ Play Now</button>
+          {/* Controls: Play + Favorite on same row */}
+          <div className="controls-row">
+            <button className="play-btn" onClick={handlePlayNow}>▶ Ver ahora</button>
 
-          <div className="fav-section">
-            <button className="fav-btn" onClick={handleAddToFavorites}>
-              Añadir a favoritos
-            </button>
-            <FaStar className={`fav-icon ${isFavorite ? "active" : ""}`} />
+            <div className="fav-section">
+              <button className="fav-btn" onClick={handleAddToFavorites}>
+                {isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
+                <FaHeart className={`fav-icon ${isFavorite ? "active" : ""}`} />
+              </button>
+            </div>
           </div>
+          {/* description remains in the right container; removed from left */}
         </div>
 
-        {/*  Descripción */}
+        {/*  Descripción (sin repetir el título) */}
         <div className="movie-right">
-          <h3 className="movie-title">{movie.title}</h3>
+          <p className="movie-rating">Calificacion: {movie.rating?.toFixed(1) ?? 0}/5</p>
           <div className="movie-desc">{movie.description || "Sin descripción disponible."}</div>
         </div>
       </div>
@@ -130,19 +320,59 @@ const MovieDetailPage = () => {
       {/*  Sección de comentarios */}
       <div className="comments-section">
         <h3>Comentarios</h3>
+        {/* Form to post a new comment */}
+        <form className="comment-form" onSubmit={handlePostComment}>
+          <textarea
+            placeholder="Escribe tu comentario..."
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+            rows={3}
+            className="comment-input"
+          />
+
+          <div className="comment-controls">
+            <label>
+              Puntuación:
+              <select value={commentRating} onChange={(e) => setCommentRating(Number(e.target.value))}>
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+                <option value={4}>4</option>
+                <option value={5}>5</option>
+              </select>
+            </label>
+            <button type="submit" className="btn btn--play" disabled={submittingComment}>
+              {submittingComment ? "Enviando..." : "Publicar comentario"}
+            </button>
+          </div>
+        </form>
         {comments.map((comment, index) => (
-          <div key={index} className="comment-card">
-            <div className="comment-user">{comment.user}</div>
+          <div key={comment._id ?? index} className="comment-card">
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div className="comment-user">{comment.user}</div>
+            </div>
             <div className="comment-rating">
               {Array.from({ length: 5 }).map((_, i) => (
-                <FaStar
+                <FaHeart
                   key={i}
                   color={i < comment.rating ? "red" : "gray"}
-                  className="star"
+                  className="heart-icon"
                 />
               ))}
             </div>
             <div className="comment-text">{comment.text}</div>
+
+            {/* Render delete button as a direct child of .comment-card so absolute positioning works
+                Use only the specific className `btn--comments` to avoid global `.btn` overrides */}
+            {currentUserName && comment.user === currentUserName && comment._id && (
+              <button
+                className="btn--comments"
+                onClick={() => handleDeleteComment(comment._id!)}
+                disabled={deletingId === comment._id}
+              >
+                {deletingId === comment._id ? 'Borrando...' : 'Borrar'}
+              </button>
+            )}
           </div>
         ))}
       </div>

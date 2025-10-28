@@ -24,6 +24,10 @@
     /* 🎥 CONTENEDOR DEL VIDEO */
     .video-wrapper {
       width: 100%;
+      /* constrain video area so it doesn't fill entire viewport */
+      max-width: 900px;
+      max-height: 540px; /* ~16:9 */
+      margin: 0 auto;
       background-color: #1a1a1a;
       border-radius: 12px;
       overflow: hidden;
@@ -32,7 +36,10 @@
       video,
       .video-placeholder {
         width: 100%;
+        height: auto;
+        max-height: 540px;
         border-radius: 12px;
+        display: block;
       }
 
       .video-placeholder {
@@ -43,9 +50,33 @@
         padding: 2rem;
 
         img {
-          max-width: 70%;
+          max-width: 100%;
+          width: 100%;
+          height: auto;
+          object-fit: cover;
           border-radius: 10px;
           margin-bottom: 1rem;
+          max-height: 420px;
+        }
+      }
+
+      /* Responsive: reduce max size on smaller screens */
+      @media (max-width: 1024px) {
+        max-width: 760px;
+        max-height: 460px;
+        video, .video-placeholder {
+          max-height: 460px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        max-width: 100%;
+        max-height: 360px;
+        video, .video-placeholder {
+          max-height: 360px;
+        }
+        .video-placeholder {
+          padding: 1rem;
         }
       }
     }
@@ -103,6 +134,8 @@
         background-color: #2a2a2a;
         border-radius: 10px;
         padding: 1rem;
+        position: relative; /* allow absolute positioning for delete button */
+        padding-right: 6rem; /* reserve space on the right for the button */
         margin-bottom: 1rem;
 
         .comment-user {
@@ -117,6 +150,94 @@
         .comment-text {
           color: #ccc;
         }
+        
+        /* delete button styles (match MoviesDetails visual) */
+        > .btn--comments {
+          position: absolute;
+          right: 14px;
+          top: 50%;
+          transform: translateY(-50%);
+          background-color: #e50914;
+          color: #fff;
+          border: none;
+          padding: 0.6rem 0.9rem;
+          border-radius: 8px;
+          font-size: 0.95rem;
+          font-weight: 600;
+          cursor: pointer;
+          box-shadow: 0 6px 18px rgba(229,9,20,0.12);
+          z-index: 5;
+        }
+
+        > .btn--comments:hover {
+          background-color: #b00610;
+          transform: translateY(calc(-50% - 2px));
+          box-shadow: 0 10px 26px rgba(176,6,16,0.16);
+        }
+
+        > .btn--comments[disabled] {
+          opacity: 0.75;
+          cursor: not-allowed;
+          transform: translateY(-50%);
+          box-shadow: none;
+        }
+      }
+
+      /* Formulario de comentarios (copied from MoviesDetails for consistent look) */
+      .comment-form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+      }
+
+      .comment-input {
+        width: 100%;
+        min-height: 80px;
+        resize: vertical;
+        background: #222;
+        color: #eee;
+        border: 1px solid rgba(255,255,255,0.04);
+        padding: 0.75rem 0.9rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
+      }
+
+      .comment-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .comment-controls label {
+        color: #ccc;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .comment-controls select {
+        background: #1b1b1b;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.06);
+        padding: 0.35rem 0.5rem;
+        border-radius: 6px;
+      }
+
+      .comment-controls .btn {
+        padding: 0.55rem 1rem;
+        border-radius: 10px;
+        background-color: #e50914;
+        color: white;
+        border: 1px solid #570d11;
+      }
+
+      .comment-controls .btn[disabled] {
+        opacity: 0.6;
+        cursor: not-allowed;
       }
     }
   }

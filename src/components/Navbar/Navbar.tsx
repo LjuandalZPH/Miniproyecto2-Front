@@ -1,35 +1,77 @@
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.scss";
 
 /**
- * Top navigation bar with search input and navigation links.
- * - On search submit, navigates to /movies?search=<query>
+ * @component Navbar
+ * @description Main navigation bar component for the Moovies platform.
+ * Provides navigation, search functionality, and authentication-aware features.
+ * 
+ * Features:
+ * - Responsive navigation with logo and main section links
+ * - Dynamic route-based active link highlighting via NavLink
+ * - Toggleable search box with auto-focus (navigates to /movies?search=<query>)
+ * - Authentication-aware rendering (login/register vs logout/profile)
+ * - Persistent auth state management via localStorage
+ * - Accessible buttons and forms with ARIA labels
+ * - Mobile-friendly design with SCSS styling
+ * 
+ * @example
+ * ```tsx
+ * // In your app's layout or main component:
+ * <Navbar />
+ * ```
+ * 
+ * @see {@link Link} from react-router-dom
+ * @see {@link NavLink} from react-router-dom
+ * @see {@link useNavigate} from react-router-dom
  */
 export const Navbar = () => {
-  const [activeTab, setActiveTab] = useState("home");
+  /** @state {boolean} Controls visibility of the search input */
   const [showSearch, setShowSearch] = useState(false);
+  
+  /** @state {string} Stores the current search query */
   const [searchQuery, setSearchQuery] = useState("");
+  
+  /** @state {boolean} Tracks user authentication status */
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  /** @ref {React.RefObject<HTMLInputElement>} Reference to search input for auto-focus */
   const searchInput = useRef<HTMLInputElement>(null);
+  
+  /** @const {Function} Navigation function from react-router-dom */
   const navigate = useNavigate();
 
+  /**
+   * Effect to initialize authentication state from localStorage
+   * @effect
+   * @fires setIsAuthenticated
+   */
   useEffect(() => {
-    // Check authentication status on mount
+    // Determine authentication state from localStorage token
     const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
   }, []);
 
+  /**
+   * Effect to auto-focus search input when search box is toggled
+   * @effect
+   * @depends showSearch
+   */
   useEffect(() => {
-    // Focus the input when the search box becomes visible
+    // Focus input when the search box is toggled open
     if (showSearch && searchInput.current) {
       searchInput.current.focus();
     }
   }, [showSearch]);
 
   /**
-   * Handle the search form submission.
-   * Navigates to /movies with the "search" query parameter.
+   * Handles search form submission and navigates to movies search results
+   * @function
+   * @param {React.FormEvent} e - The form submission event
+   * @fires navigate - Navigates to /movies with search query
+   * @fires setShowSearch - Closes the search box
+   * @fires setSearchQuery - Clears the search input
    */
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +84,11 @@ export const Navbar = () => {
   };
 
   /**
-   * Clear auth token and navigate to login page.
+   * Handles user logout by clearing authentication and redirecting
+   * @function
+   * @fires localStorage.removeItem - Removes the authentication token
+   * @fires setIsAuthenticated - Updates authentication state
+   * @fires navigate - Redirects to login page
    */
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -61,20 +107,35 @@ export const Navbar = () => {
 
         {/* Navigation Links */}
         <div className="navbar__nav">
-          <Link
+          <NavLink
             to="/"
-            className={`navbar__link ${activeTab === "home" ? "navbar__link--active" : ""}`}
-            onClick={() => setActiveTab("home")}
+            end
+            className={({ isActive }) =>
+              `navbar__link ${isActive ? "navbar__link--active" : ""}`
+            }
           >
-            Home
-          </Link>
-          <Link
+            Inicio
+          </NavLink>
+
+          <NavLink
             to="/movies"
-            className={`navbar__link ${activeTab === "movies" ? "navbar__link--active" : ""}`}
-            onClick={() => setActiveTab("movies")}
+            className={({ isActive }) =>
+              `navbar__link ${isActive ? "navbar__link--active" : ""}`
+            }
           >
-            Movies & Shows
-          </Link>
+            Peliculas y series
+          </NavLink>
+
+          {isAuthenticated && (
+            <NavLink
+              to="/favorites"
+              className={({ isActive }) =>
+                `navbar__link ${isActive ? "navbar__link--active" : ""}`
+              }
+            >
+              Favoritos
+            </NavLink>
+          )}
         </div>
 
         {/* Right side actions */}
@@ -107,27 +168,24 @@ export const Navbar = () => {
           )}
 
           {/* User Icon */}
-          <Link to="/profile" className="navbar__icon-btn" aria-label="Perfil de usuario">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <circle cx="12" cy="8" r="4" strokeWidth="2" />
-              <path d="M4 20c2-4 6-6 8-6s6 2 8 6" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          </Link>
+          {isAuthenticated && (
+            <Link to="/profile" className="navbar__icon-btn" aria-label="Perfil de usuario">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="8" r="4" strokeWidth="2" />
+                <path d="M4 20c2-4 6-6 8-6s6 2 8 6" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </Link>
+          )}
 
           {/* Auth actions */}
           {!isAuthenticated ? (
             <>
-              {/* Show both login and register when not authenticated */}
-              <Link to="/login" className="navbar__auth-btn">
-                Iniciar sesión
-              </Link>
-              <Link to="/register" className="navbar__auth-btn">
-                Registrarse
-              </Link>
+              <Link to="/login" className="navbar__auth-btn">Iniciar sesión</Link>
+              <Link to="/register" className="navbar__auth-btn">Registrarse</Link>
             </>
           ) : (
             <button className="navbar__auth-btn" onClick={handleLogout}>
-              Logout
+              Cerrar sesión
             </button>
           )}
         </div>

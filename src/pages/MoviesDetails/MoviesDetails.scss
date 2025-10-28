@@ -10,8 +10,10 @@
 .movie-details-content {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  gap: 2rem;
+  /* Stack the right container below the left container */
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
   padding: 3rem 5%;
   background-color: #121212;
   border-radius: 12px;
@@ -21,14 +23,15 @@
 
 /* --- SECCIÓN IZQUIERDA (IMAGEN Y BOTONES) --- */
 .movie-left {
-  flex: 1;
-  max-width: 360px;
+  /* Make top container match the width of the bottom container */
+  width: 100%;
+  max-width: 760px;
   background-color: #1f1f1f;
   border-radius: 15px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  align-items: right;
+    align-items: center;
   text-align: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 
@@ -39,6 +42,10 @@
     margin-bottom: 1rem;
     background-color: #333;
     object-fit: cover;
+    /* constrain poster image so all cards look consistent */
+    max-width: 560px;
+    max-height: 420px;
+    height: auto;
   }
 
   .featured-title {
@@ -51,12 +58,16 @@
     background-color: #e50914;
     border: none;
     color: white;
-    padding: 0.6rem 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0 1.2rem;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     transition: 0.3s;
-    margin-bottom: 1rem;
+  margin-bottom: 0; /* remove extra bottom spacing so it aligns with fav button */
 
     &:hover {
       background-color: #b0060f;
@@ -68,55 +79,88 @@
   justify-content: center; /* centra el grupo en el eje horizontal */
   align-items: center;
   gap: 0.6rem;
-  margin-top: 0.8rem;
+  margin-top: 0; /* remove top offset so it lines up with Play button */
   position: relative;
-  left: 10px; /* 🔹 desplaza todo el grupo un poco hacia la derecha */
+  left: 0; /* keep centered */
 
-  .fav-btn {
-    background-color: #e50914;
-    border: none;
-    color: white;
-    padding: 0.6rem 1rem;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
+    .fav-btn {
+      background-color: #e50914;
+      border: none;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+      padding: 0 1.2rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      gap: 0.5rem;
+
+      &:hover {
+        background-color: #b0060f;
+      }
+    }
+
+    .fav-icon {
+      font-size: 1.2rem;
+      color: #555;
+      transition: color 0.3s ease;
+
+      &.active {
+        color: #f5c518;
+      }
+    }
+  }
+
+  /* Row to align Play and Favorite buttons horizontally */
+  .controls-row {
     display: flex;
     align-items: center;
     justify-content: center;
-
-    &:hover {
-      background-color: #b0060f;
-    }
+    gap: 1rem;
+    width: 100%;
   }
 
-  .fav-icon {
-    font-size: 1.4rem;
-    color: #555;
-    transition: color 0.3s ease;
-    margin-top: 2px;
+  /* ensure both controls share visual height when next to each other */
+  .controls-row .play-btn,
+  .controls-row .fav-btn {
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
-    &.active {
-      color: #f5c518;
+  /* Responsive: stack controls vertically on very narrow screens */
+  @media (max-width: 420px) {
+    .controls-row {
+      flex-direction: column;
+      gap: 0.6rem;
     }
   }
-}
 
 
 }
 
 /* --- SECCIÓN DERECHA (DETALLES Y DESCRIPCIÓN) --- */
 .movie-right {
-  flex: 1.5;
+  /* Right container appears below the left; keep same visual card styling */
+  width: 100%;
+  max-width: 760px;
   background-color: #1f1f1f;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
 
   .movie-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
   }
 
   .movie-desc {
@@ -143,14 +187,51 @@
   }
 
   .comment-card {
-    background-color: #262626;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
+  background-color: #262626;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  position: relative; /* allow absolute positioning for the button */
+  /* reserve horizontal space on the right so the absolute button doesn't overlap the text */
+  padding-right: 6rem;
+  padding-bottom: 1rem;
 
     .comment-user {
       font-weight: 600;
       margin-bottom: 0.3rem;
+    }
+
+    /* Delete button: positioned at the right, vertically centered inside the comment card
+       Use direct child selector (`> .btn--comments`) to avoid duplicating `.comment-card` in compiled CSS */
+    > .btn--comments {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #e50914; /* primary red */
+      color: #fff;
+      border: none;
+      padding: 0.6rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.08s ease, box-shadow 0.12s ease;
+      box-shadow: 0 6px 18px rgba(229,9,20,0.12);
+      z-index: 5; /* ensure it sits above other elements */
+    }
+
+    > .btn--comments:hover {
+      background-color: #b00610;
+      transform: translateY(calc(-50% - 2px));
+      box-shadow: 0 10px 26px rgba(176,6,16,0.16);
+    }
+
+    > .btn--comments[disabled] {
+      opacity: 0.75;
+      cursor: not-allowed;
+      transform: translateY(-50%);
+      box-shadow: none;
     }
 
     .comment-rating {
@@ -168,19 +249,75 @@
       color: #f5c518;
     }
   }
+
+  /* Formulario de comentarios */
+  .comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .comment-input {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    background: #222;
+    color: #eee;
+    border: 1px solid rgba(255,255,255,0.04);
+    padding: 0.75rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+  }
+
+  .comment-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .comment-controls label {
+    color: #ccc;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .comment-controls select {
+    background: #1b1b1b;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 0.35rem 0.5rem;
+    border-radius: 6px;
+  }
+
+  .comment-controls .btn {
+    padding: 0.55rem 1rem;
+    border-radius: 10px;
+    background-color: #e50914;
+    color: white;
+    border: 1px solid #570d11;
+  }
+
+  .comment-controls .btn[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 
 /* --- RESPONSIVE --- */
 @media (max-width: 900px) {
   .movie-details-content {
-    flex-direction: column;
-    align-items: center;
+    /* already stacked by default; keep spacing smaller on narrow screens */
+    gap: 1rem;
   }
 
   .movie-right {
     width: 100%;
   }
-
   .movie-left {
     width: 100%;
     max-width: 400px;
