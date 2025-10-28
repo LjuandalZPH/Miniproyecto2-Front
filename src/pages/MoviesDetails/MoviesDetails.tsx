@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./MoviesDetails.scss";
-import { FaStar } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 import { getProfile, toggleFavorite, getUserFavorites } from "../../services/authService";
@@ -206,7 +206,7 @@ const MovieDetailPage = () => {
             <div className="fav-section">
               <button className="fav-btn" onClick={handleAddToFavorites}>
                 {isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
-                <FaStar className={`fav-icon ${isFavorite ? "active" : ""}`} />
+                <FaHeart className={`fav-icon ${isFavorite ? "active" : ""}`} />
               </button>
             </div>
           </div>
@@ -256,10 +256,10 @@ const MovieDetailPage = () => {
             </div>
             <div className="comment-rating">
               {Array.from({ length: 5 }).map((_, i) => (
-                <FaStar
+                <FaHeart
                   key={i}
                   color={i < comment.rating ? "red" : "gray"}
-                  className="star"
+                  className="heart-icon"
                 />
               ))}
             </div>
