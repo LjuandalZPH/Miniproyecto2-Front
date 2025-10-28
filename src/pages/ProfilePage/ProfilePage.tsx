@@ -214,6 +214,14 @@ const ProfilePage: React.FC = () => {
                   }
                 />
 
+                <label>Correo</label>
+                  <input
+                    type="email"
+                    value={editedUser.email ?? ""}
+                    onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
+                />
+
+
                 <label>Nueva contraseña</label>
                   <div className="password-field">
                   <input
