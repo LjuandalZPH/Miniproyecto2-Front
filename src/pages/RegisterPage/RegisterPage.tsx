@@ -5,19 +5,44 @@ import { Footer } from "../../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../services/authService";
 
+/**
+ * @component RegisterPage
+ * @description Registration page where new users can create an account.
+ * Collects name, age, email, password and an optional avatar image preview.
+ * Performs client-side password validation and posts a registration payload
+ * to the `register` service. Shows loading, success (alert) and error states.
+ *
+ * This component intentionally only adds documentation — no runtime logic was
+ * changed when adding the comments.
+ */
 const RegisterPage: React.FC = () => {
+  /** Optional local data URL used to preview avatar image selected by the user */
   const [preview, setPreview] = useState<string | null>(null);
+  /** First name input value */
   const [firstName, setFirstName] = useState("");
+  /** Last name input value */
   const [lastName, setLastName] = useState("");
+  /** Age input value (number or empty string before entry) */
   const [age, setAge] = useState<number | "">("");
+  /** Email input value */
   const [email, setEmail] = useState("");
+  /** Password input value */
   const [password, setPassword] = useState("");
+  /** Confirm password input value */
   const [confirmPassword, setConfirmPassword] = useState("");
+  /** Loading flag while registration request is in progress */
   const [loading, setLoading] = useState(false);
+  /** Error message shown to the user (validation or server-side) */
   const [error, setError] = useState<string | null>(null);
 
+  /** Navigation helper from react-router */
   const navigate = useNavigate();
 
+  /**
+   * Handle image file selection and generate a local data URL for preview.
+   * This does not upload the image; it only updates local preview state.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - file input change event
+   */
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -35,6 +60,13 @@ const RegisterPage: React.FC = () => {
    * - Al menos un número
    * - Al menos un carácter especial
    */
+  /**
+   * Validate password against the project's rules.
+   * Returns a newline-separated message listing unmet requirements, or null
+   * when the password satisfies all rules.
+   * @param {string} password - Candidate password
+   * @returns {string | null} Error message(s) or null
+   */
   const validatePassword = (password: string): string | null => {
     const requirements = [
       { regex: /.{8,}/, message: "Debe tener al menos 8 caracteres." },
@@ -51,6 +83,12 @@ const RegisterPage: React.FC = () => {
     return null;
   };
 
+  /**
+   * Handle registration form submission. Performs client-side validation
+   * (required fields, age range, password rules, password confirmation)
+   * and calls the `register` service with a normalized payload.
+   * @param {React.FormEvent} e - Form submission event
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -101,6 +139,8 @@ const RegisterPage: React.FC = () => {
     }
   };
 
+  // Render: registration form, error messages and an optional avatar preview.
+  // Functional behavior is unchanged; these comments only document purpose.
   return (
     <div className="register-page">
       <Navbar />

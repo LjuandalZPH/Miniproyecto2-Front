@@ -3,26 +3,61 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.scss";
 
 /**
- * Top navigation bar component.
- *
+ * @component Navbar
+ * @description Main navigation bar component for the Moovies platform.
+ * Provides navigation, search functionality, and authentication-aware features.
+ * 
  * Features:
- * - Active link styling based on URL via NavLink.
- * - Optional search box that navigates to /movies?search=<query>.
- * - Auth-aware actions (login/register vs logout/profile).
+ * - Responsive navigation with logo and main section links
+ * - Dynamic route-based active link highlighting via NavLink
+ * - Toggleable search box with auto-focus (navigates to /movies?search=<query>)
+ * - Authentication-aware rendering (login/register vs logout/profile)
+ * - Persistent auth state management via localStorage
+ * - Accessible buttons and forms with ARIA labels
+ * - Mobile-friendly design with SCSS styling
+ * 
+ * @example
+ * ```tsx
+ * // In your app's layout or main component:
+ * <Navbar />
+ * ```
+ * 
+ * @see {@link Link} from react-router-dom
+ * @see {@link NavLink} from react-router-dom
+ * @see {@link useNavigate} from react-router-dom
  */
 export const Navbar = () => {
+  /** @state {boolean} Controls visibility of the search input */
   const [showSearch, setShowSearch] = useState(false);
+  
+  /** @state {string} Stores the current search query */
   const [searchQuery, setSearchQuery] = useState("");
+  
+  /** @state {boolean} Tracks user authentication status */
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  /** @ref {React.RefObject<HTMLInputElement>} Reference to search input for auto-focus */
   const searchInput = useRef<HTMLInputElement>(null);
+  
+  /** @const {Function} Navigation function from react-router-dom */
   const navigate = useNavigate();
 
+  /**
+   * Effect to initialize authentication state from localStorage
+   * @effect
+   * @fires setIsAuthenticated
+   */
   useEffect(() => {
     // Determine authentication state from localStorage token
     const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
   }, []);
 
+  /**
+   * Effect to auto-focus search input when search box is toggled
+   * @effect
+   * @depends showSearch
+   */
   useEffect(() => {
     // Focus input when the search box is toggled open
     if (showSearch && searchInput.current) {
@@ -31,8 +66,12 @@ export const Navbar = () => {
   }, [showSearch]);
 
   /**
-   * Handle search form submission and navigate to /movies results.
-   * @param e Form submit event.
+   * Handles search form submission and navigates to movies search results
+   * @function
+   * @param {React.FormEvent} e - The form submission event
+   * @fires navigate - Navigates to /movies with search query
+   * @fires setShowSearch - Closes the search box
+   * @fires setSearchQuery - Clears the search input
    */
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +84,11 @@ export const Navbar = () => {
   };
 
   /**
-   * Clear token and navigate to login page.
+   * Handles user logout by clearing authentication and redirecting
+   * @function
+   * @fires localStorage.removeItem - Removes the authentication token
+   * @fires setIsAuthenticated - Updates authentication state
+   * @fires navigate - Redirects to login page
    */
   const handleLogout = () => {
     localStorage.removeItem("token");

@@ -2,10 +2,40 @@ import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/Footer';
 import './AboutPage.scss';
 
+/**
+ * @component AboutPage
+ * @description The About Us page component for the Moovies platform.
+ * Presents company information, mission statement, and team details in an accessible format.
+ * 
+ * Features:
+ * - Responsive layout with hero section
+ * - Company overview and mission statement
+ * - Team member listing
+ * - Accessible content with proper ARIA roles and tabIndex
+ * - Semantic HTML structure with main and section elements
+ * - SCSS-based styling
+ * 
+ * Page Sections:
+ * - Hero with logo and slogan
+ * - "Who we are" section
+ * - Mission statement
+ * - "Why Moovies" value proposition
+ * - Development team listing
+ * 
+ * @example
+ * ```tsx
+ * <Route path="/about" element={<AboutPage />} />
+ * ```
+ * 
+ * @returns {JSX.Element} A complete about page with navigation, main content, and footer
+ */
 export const AboutPage = () => (
   <div className="about-page" role="main">
+    {/* Global navigation */}
     <Navbar />
+    {/* Main content area with semantic HTML5 structure */}
     <main className="about-main">
+      {/* Hero section with logo and main headline */}
       <section className="about-hero">
         <img src="/MoovieNormal.png" alt="Logo de Moovies" className="about-logo" />
         <h1 tabIndex={0}>Sobre Nosotros</h1>
@@ -13,6 +43,7 @@ export const AboutPage = () => (
           Un equipo, una misión: ¡Películas libres para todas las personas!
         </p>
       </section>
+      {/* Main content cards with company information */}
       <section className="about-content">
         <div className="about-card">
           <h2 tabIndex={0}>¿Quiénes somos?</h2>
@@ -33,7 +64,8 @@ export const AboutPage = () => (
           </p>
         </div>
       </section>
-      <section className="about-team">
+      {/* Development team section with member listing */}
+      <section className="about-team" aria-label="Equipo de desarrollo">
         <h2 tabIndex={0}>Equipo de Desarrollo</h2>
         <ul>
           <li>LjuandalZPH</li>
