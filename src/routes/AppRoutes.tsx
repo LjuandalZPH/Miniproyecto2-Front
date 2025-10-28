@@ -10,6 +10,7 @@ import ChangePasswordPage from "../pages/ChangePasswordPage/ChangePasswordPage";
 import MovieDetailPage from '../pages/MoviesDetails/MoviesDetails';
 import MoviePlayerPage from "../pages/MoviesPlayerPage/MoviesPlayerPage"; 
 import FavoritesPage from '../pages/FavoritesPage/FavoritesPage';
+import  UserManualPage  from "../pages/UserManual/UserManualPage";
 
 export const AppRoutes = () => (
   <BrowserRouter>
@@ -25,6 +26,7 @@ export const AppRoutes = () => (
       <Route path="/movies/:id" element={<MovieDetailPage />} />
       <Route path="/watch/:id" element={<MoviePlayerPage />} /> 
       <Route path="/favorites" element={<FavoritesPage />} />
+      <Route path="/manual" element={<UserManualPage />} />
     </Routes>
   </BrowserRouter>
 );
