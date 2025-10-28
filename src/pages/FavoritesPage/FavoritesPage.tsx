@@ -5,6 +5,14 @@ import { Navbar } from "../../components/Navbar/Navbar";
 import { Footer } from "../../components/Footer/Footer";
 import "./FavoritesPage.scss";
 
+/**
+ * @interface Movie
+ * @description Interface for movie data in favorites list
+ * @property {string} _id - Unique identifier for the movie
+ * @property {string} title - Movie title
+ * @property {string} [genre] - Optional genre of the movie
+ * @property {string} [image] - Optional URL to movie poster
+ */
 interface Movie {
   _id: string;
   title: string;
@@ -12,12 +20,29 @@ interface Movie {
   image?: string;
 }
 
+/**
+ * @component FavoritesPage
+ * @description Page component that displays and manages user's favorite movies.
+ * Allows users to view their favorite movies, remove them from favorites,
+ * and navigate to movie details.
+ * 
+ * @returns {JSX.Element} The favorites page component
+ */
 export default function FavoritesPage() {
+  /** Navigation hook for routing */
   const navigate = useNavigate();
+  /** State to store user's favorite movies */
   const [favorites, setFavorites] = useState<Movie[]>([]);
+  /** Loading state while fetching favorites */
   const [loadingFavs, setLoadingFavs] = useState(true);
 
+  /**
+   * Fetches user's favorite movies on component mount
+   */
   useEffect(() => {
+    /**
+     * Retrieves user profile and their favorite movies from the API
+     */
     const fetchFavorites = async () => {
         try {
         const user = await getProfile(); 
@@ -36,6 +61,10 @@ export default function FavoritesPage() {
     fetchFavorites();
     }, []);
 
+    /**
+     * Removes a movie from user's favorites
+     * @param {string} movieId - The ID of the movie to remove
+     */
     const handleRemoveFavorite = async (movieId: string) => {
         try {
             const user = await getProfile();

@@ -7,6 +7,14 @@ import { Footer } from "../../components/Footer";
 import { getProfile, toggleFavorite, getUserFavorites } from "../../services/authService";
 import api from "../../services/api";
 
+/**
+ * @interface Comment
+ * @description Interface for movie comments
+ * @property {string} user - Name or identifier of the comment author
+ * @property {string} text - Content of the comment
+ * @property {number} rating - User rating (1-5 stars)
+ * @property {string} [_id] - Optional unique identifier for the comment
+ */
 interface Comment {
   user: string;
   text: string;
@@ -14,6 +22,17 @@ interface Comment {
   _id?: string;
 }
 
+/**
+ * @interface Movie
+ * @description Interface for movie details
+ * @property {string} _id - Unique identifier for the movie
+ * @property {string} title - Movie title
+ * @property {string} description - Movie description or synopsis
+ * @property {string} image - URL to movie poster image
+ * @property {string} [videoUrl] - Optional URL to movie video content
+ * @property {string} [genre] - Optional movie genre
+ * @property {number} [rating] - Optional average rating (1-5 stars)
+ */
 interface Movie {
   _id: string;
   title: string;
@@ -24,20 +43,67 @@ interface Movie {
   rating?: number
 }
 
+/**
+ * @component MovieDetailPage
+ * @description Detailed view page for a single movie. Shows movie information,
+ * handles favorites, and manages user comments and ratings.
+ * 
+ * Features:
+ * - Displays movie details (title, image, description)
+ * - Manages favorite status
+ * - Handles user comments and ratings
+ * - Provides video playback navigation
+ * - Supports comment deletion for owners
+ * - Real-time rating updates
+ * 
+ * @example
+ * ```tsx
+ * <Route path="/movies/:id" element={<MovieDetailPage />} />
+ * ```
+ */
 const MovieDetailPage = () => {
+  /** @const {string} Movie ID from URL parameters */
   const { id } = useParams<{ id: string }>();
+  
+  /** @state {Movie | null} Current movie details */
   const [movie, setMovie] = useState<Movie | null>(null);
+  
+  /** @state {Comment[]} List of movie comments */
   const [comments, setComments] = useState<Comment[]>([]);
+  
+  /** @state {string} New comment text input */
   const [commentText, setCommentText] = useState("");
+  
+  /** @state {number} New comment rating selection */
   const [commentRating, setCommentRating] = useState<number>(4);
+  
+  /** @state {boolean} Loading state for comment submission */
   const [submittingComment, setSubmittingComment] = useState(false);
+  
+  /** @state {string | null} Current authenticated user's name */
   const [currentUserName, setCurrentUserName] = useState<string | null>(null);
+  
+  /** @state {string | null} ID of comment being deleted */
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  
+  /** @const {Function} Navigation function from react-router-dom */
   const navigate = useNavigate();
 
    
+  /**
+   * Effect hook to fetch movie details when component mounts or ID changes
+   * @effect
+   * @fires setMovie - Updates movie details
+   * @fires setIsFavorite - Updates favorite status
+   * @fires setComments - Updates comment list
+   */
   useEffect(() => {
-  const fetchMovie = async () => {
+    /**
+     * Fetches movie details from the API
+     * @async
+     * @function fetchMovie
+     */
+    const fetchMovie = async () => {
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/movies/${id}`);
       if (!res.ok) throw new Error("Error al obtener los datos de la película");
@@ -70,6 +136,16 @@ const MovieDetailPage = () => {
   }, []);
 
   // Handler to post a new comment
+  /**
+   * Handles posting a new comment to the movie
+   * @async
+   * @function handlePostComment
+   * @param {React.FormEvent} [e] - Optional form submission event
+   * @fires setComments - Updates comments list with new comment
+   * @fires setMovie - Updates movie details (rating might change)
+   * @fires setCommentText - Clears comment input
+   * @fires setCommentRating - Resets rating selection
+   */
   const handlePostComment = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!movie) return;
@@ -104,7 +180,7 @@ const MovieDetailPage = () => {
     }
   };
 
-  // Cuando cargue la película, comprobar si el usuario la tiene en favoritos
+  // Favorite handling
   useEffect(() => {
     const checkIfFavorite = async () => {
       if (!movie) return;
@@ -137,6 +213,13 @@ const MovieDetailPage = () => {
   
   const [isFavorite, setIsFavorite] = useState(false);
 
+  /**
+   * Toggles the favorite status of the movie for the current user
+   * @async
+   * @function handleAddToFavorites
+   * @fires toggleFavorite - API call to update favorite status
+   * @fires setIsFavorite - Updates local favorite state
+   */
   const handleAddToFavorites = async () => {
   if (!movie) return;
 
@@ -157,6 +240,15 @@ const MovieDetailPage = () => {
 };
 
   // Delete a comment (only allowed for the comment owner)
+  /**
+   * Deletes a comment from the movie (only available to comment owner)
+   * @async
+   * @function handleDeleteComment
+   * @param {string} commentId - ID of the comment to delete
+   * @fires setMovie - Updates movie with new comment list
+   * @fires setComments - Updates comments list
+   * @fires setDeletingId - Manages loading state for deletion
+   */
   const handleDeleteComment = async (commentId: string) => {
     if (!movie) return;
     if (!commentId) return;
@@ -183,6 +275,11 @@ const MovieDetailPage = () => {
   };
 
   
+  /**
+   * Navigates to the movie playback page
+   * @function handlePlayNow
+   * @fires navigate - Redirects to /watch/:id
+   */
   const handlePlayNow = () => {
     navigate(`/watch/${movie?._id}`);
   };
@@ -201,7 +298,7 @@ const MovieDetailPage = () => {
 
           {/* Controls: Play + Favorite on same row */}
           <div className="controls-row">
-            <button className="play-btn" onClick={handlePlayNow}>▶ Play Now</button>
+            <button className="play-btn" onClick={handlePlayNow}>▶ Ver ahora</button>
 
             <div className="fav-section">
               <button className="fav-btn" onClick={handleAddToFavorites}>
@@ -215,7 +312,7 @@ const MovieDetailPage = () => {
 
         {/*  Descripción (sin repetir el título) */}
         <div className="movie-right">
-          <p className="movie-rating">Promedio: {movie.rating?.toFixed(1) ?? 0}/5</p>
+          <p className="movie-rating">Calificacion: {movie.rating?.toFixed(1) ?? 0}/5</p>
           <div className="movie-desc">{movie.description || "Sin descripción disponible."}</div>
         </div>
       </div>

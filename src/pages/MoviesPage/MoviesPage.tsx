@@ -6,6 +6,17 @@ import "./MoviesPage.scss";
 import { resolveImageUrl } from "../../utils/images";
 
 
+/**
+ * @interface Movie
+ * @description Movie data used in the movies listing
+ * @property {string} _id - Unique identifier for the movie
+ * @property {string} title - Title of the movie
+ * @property {string} [description] - Optional description or synopsis
+ * @property {string} [genre] - Optional genre name
+ * @property {string} [image] - Optional poster/image URL
+ * @property {boolean} [favorite] - Optional favorite flag for the current user
+ * @property {number} [rating] - Optional average rating
+ */
 interface Movie {
   _id: string;
   title: string;
@@ -16,25 +27,50 @@ interface Movie {
   rating?: number;
 }
 
+/**
+ * @component MoviesPage
+ * @description Movies listing page. Fetches movies from the API, supports
+ * client-side genre filtering and query string search, and shows a featured movie.
+ *
+ * - Fetches movie list on mount
+ * - Applies genre filter and search (client-side)
+ * - Displays featured movie (first in filtered list)
+ * - Navigates to details or playback pages
+ *
+ * @returns {JSX.Element} The movies listing page
+ */
 export const MoviesPage = () => {
+  /** Navigation function from react-router */
   const navigate = useNavigate();
+
+  /** List of movies fetched from the API */
   const [movies, setMovies] = useState<Movie[]>([]);
+
+  /** Loading flag while fetching movies */
   const [loading, setLoading] = useState(true);
+
+  /** Controls visibility of the genres dropdown */
   const [showGenres, setShowGenres] = useState(false);
+
+  /** Currently selected genre for client-side filtering */
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
   // Read search query param (e.g. /movies?search=bunny)
+  /** URL search params (reads ?search=) */
   const [searchParams] = useSearchParams();
+  /** Normalized search query extracted from URL (lowercase, trimmed) */
   const searchQueryParam =
     searchParams.get("search")?.toLowerCase().trim() ?? null;
 
   // Apply genre + search filtering client-side (case-insensitive, partial match)
+  /** Movies filtered by selected genre (if any) */
   const filteredByGenre = selectedGenre
     ? movies.filter(
         (m: Movie) => (m.genre || "").toLowerCase() === selectedGenre.toLowerCase()
       )
     : movies;
 
+  /** Apply search query filtering on top of genre filtering */
   const filteredMovies = searchQueryParam
     ? filteredByGenre.filter(
         (m: Movie) =>
@@ -44,6 +80,10 @@ export const MoviesPage = () => {
     : filteredByGenre;
 
   // Fetch all movies (simple list)
+  /**
+   * Effect: fetch movies from API on mount
+   * Updates `movies` and `loading` state
+   */
   useEffect(() => {
     const fetchMovies = async () => {
       setLoading(true);
@@ -62,6 +102,10 @@ export const MoviesPage = () => {
     fetchMovies();
   }, []);
 
+  /**
+   * Navigate to the movie details page
+   * @param {string} id Movie id
+   */
   const handleMovieClick = (id: string) => {
     navigate(`/movies/${id}`);
   };
@@ -72,7 +116,7 @@ export const MoviesPage = () => {
     <div className="movies-page">
       <Navbar />
 
-      {/* Featured (usa la lista filtrada) */}
+      {/* Featured */}
       {filteredMovies.length > 0 && (
         <section className="featured">
           <div className="featured__container">
@@ -96,7 +140,7 @@ export const MoviesPage = () => {
                   className="btn btn--play"
                   onClick={() => navigate(`/watch/${filteredMovies[0]._id}`)}
                 >
-                  ▶ Play Now
+                  ▶ Ver ahora
                 </button>
                 <button
                   className="btn btn--comments"
@@ -111,7 +155,7 @@ export const MoviesPage = () => {
       )}
 
       <main className="movies-content">
-        {/* Películas por género */}
+        
         <section className="genre-section">
           <h3>
             <span className="tag">Género</span>

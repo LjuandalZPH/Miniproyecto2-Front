@@ -5,15 +5,34 @@ import { Footer } from "../../components/Footer";
 import { getProfile, getUserFavorites, toggleFavorite } from "../../services/authService";
 import api from "../../services/api";
 import "./MoviesPlayerPage.scss";
-import { FaStar } from "react-icons/fa";
+import { FaHeart, FaStar } from "react-icons/fa";
 
+/**
+ * @interface Subtitle
+ * @description Represents a single subtitle/track for a video.
+ * @property {string} lang - Language code (e.g. 'es', 'en')
+ * @property {string} label - Human-readable label for the track (e.g. 'Español')
+ * @property {string} src - Source path or absolute URL to the .vtt file
+ * @property {boolean} [default] - Whether this track should be the default
+ */
 interface Subtitle {
-  lang: string;   // 'es' | 'en' | ...
-  label: string;  // 'Español' | 'English' | ...
-  src: string;    // "/subtitles/<id>.es.vtt" o URL absoluta
+  lang: string;
+  label: string;
+  src: string;
   default?: boolean;
 }
 
+/**
+ * @interface Movie
+ * @description Movie details used by the player page
+ * @property {string} _id - Movie unique identifier
+ * @property {string} title - Movie title
+ * @property {string} description - Movie description
+ * @property {string} videoUrl - URL of the video to play
+ * @property {string} image - Poster/image URL
+ * @property {Comment[]} [comments] - Optional list of comments
+ * @property {Subtitle[]} [subtitles] - Optional list of subtitle tracks
+ */
 interface Movie {
   _id: string;
   title: string;
@@ -21,9 +40,17 @@ interface Movie {
   videoUrl: string;
   image: string;
   comments?: Comment[];
-  subtitles?: Subtitle[]; // <-- añadido para soportar subtítulos
+  subtitles?: Subtitle[];
 }
 
+/**
+ * @interface Comment
+ * @description User comment attached to a movie
+ * @property {string} user - Display name or identifier of the commenter
+ * @property {string} text - Comment text
+ * @property {number} rating - Rating given by the user (1-5)
+ * @property {string} [_id] - Optional comment id
+ */
 interface Comment {
   user: string;
   text: string;
@@ -31,15 +58,29 @@ interface Comment {
   _id?: string;
 }
 
+/**
+ * @component MoviePlayerPage
+ * @description Page responsible for playing a single movie, displaying
+ * subtitles, description, and managing comments and favorites.
+ */
 const MoviePlayerPage = () => {
+  /** Movie id taken from route params */
   const { id } = useParams<{ id: string }>();
+  /** Currently loaded movie details (null while loading) */
   const [movie, setMovie] = useState<Movie | null>(null);
+  /** Comments for the current movie */
   const [comments, setComments] = useState<Comment[]>([]);
+  /** Whether the current user has this movie as favorite */
   const [isFavorite, setIsFavorite] = useState(false);
+  /** Current authenticated user's display name (used to show delete buttons) */
   const [currentUserName, setCurrentUserName] = useState<string | null>(null);
+  /** ID of comment currently being deleted (loading state) */
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  /** New comment text being composed */
   const [commentText, setCommentText] = useState("");
+  /** New comment rating */
   const [commentRating, setCommentRating] = useState<number>(4);
+  /** Submission flag used while sending comment to server */
   const [submittingComment, setSubmittingComment] = useState(false);
 
   useEffect(() => {
@@ -199,12 +240,23 @@ const MoviePlayerPage = () => {
 
   if (!movie) return <p className="loading">Cargando película...</p>;
 
-  // Resolver src de track: si es relativa, prefija con VITE_API_URL; si es absoluta, déjala igual
+  /**
+   * Resolve subtitle track source.
+   * If the provided src is an absolute URL it is returned as-is. If it's a relative path,
+   * prefix it with the configured VITE_API_URL while avoiding duplicated slashes.
+   *
+   * @param {string} src - Track source (relative path or absolute URL)
+   * @returns {string} Resolved absolute URL for the track
+   */
   const resolveTrack = (src: string) =>
     /^https?:\/\//i.test(src)
       ? src
       : `${(import.meta.env.VITE_API_URL || "").replace(/\/+$/, "")}/${src.replace(/^\/+/, "")}`;
 
+  /**
+   * Render: video player, playback actions, description and comments section.
+   * The video uses the `movie.videoUrl` if available, otherwise a placeholder is shown.
+   */
   return (
     <div className="movie-player-page">
       <Navbar />
@@ -244,7 +296,7 @@ const MoviePlayerPage = () => {
           <button className="fav-btn" onClick={handleAddToFavorites}>
             {isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
           </button>
-          <FaStar className={`fav-icon ${isFavorite ? "active" : ""}`} />
+          <FaHeart className={`fav-icon ${isFavorite ? "active" : ""}`} />
         </div>
 
         <p className="movie-description">{movie.description}</p>
@@ -315,5 +367,5 @@ const MoviePlayerPage = () => {
   );
 };
 
-//llamen a la policia
+// Note: default export for the route. Kept as default to match existing imports elsewhere.
 export default MoviePlayerPage;

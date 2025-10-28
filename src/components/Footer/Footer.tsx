@@ -1,12 +1,36 @@
 import './Footer.scss';
 
+/**
+ * @component Footer
+ * @description Main footer component for the Moovies streaming platform.
+ * Includes branding, navigation links, social media links, and copyright information.
+ * 
+ * Features:
+ * - Brand section with logo and description
+ * - Social media links (Facebook, Twitter, Instagram, YouTube)
+ * - Navigation links to main site sections
+ * - Support links
+ * - Dynamic copyright year
+ * - Responsive design (styled with SCSS)
+ * 
+ * @example
+ * ```tsx
+ * <Footer />
+ * ```
+ * 
+ * @returns {JSX.Element} A footer section with brand information, navigation, and social links
+ */
 export const Footer = () => {
+  /** @const {number} currentYear - Current year for copyright notice */
   const currentYear = new Date().getFullYear();
 
+  /**
+   * @returns {JSX.Element} Structured footer with multiple sections
+   */
   return (
     <footer className="footer">
       <div className="footer__container">
-        {/* Logo y descripción */}
+        {/* Brand section with logo and description */}
         <div className="footer__section footer__brand">
           <div className="footer__logo">
             <img 
@@ -20,7 +44,7 @@ export const Footer = () => {
             La mejor plataforma de streaming con acceso a miles de películas y series. 
             Disfruta de contenido ilimitado cuando quieras y donde quieras.
           </p>
-          {/* Redes sociales */}
+          {/* Social media links with SVG icons */}
           <div className="footer__social">
             <a href="#" className="footer__social-link" aria-label="Facebook">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -45,7 +69,7 @@ export const Footer = () => {
           </div>
         </div>
 
-        {/* Enlaces de navegación */}
+        {/* Navigation links section */}
         <div className="footer__section">
           <h3 className="footer__title">Navegación</h3>
           <ul className="footer__links">
@@ -56,18 +80,18 @@ export const Footer = () => {
           </ul>
         </div>
 
-        {/* Soporte */}
+        {/* Support links section */}
         <div className="footer__section">
           <h3 className="footer__title">Soporte</h3>
           <ul className="footer__links">
-            <li><a href="/help">Manual de usuario</a></li>
+            <li><a href="/Manual">Manual de usuario</a></li>
             <li><a href="/about">Sobre nosotros</a></li>
             <li><a href="/profile">Cuenta</a></li>
           </ul>
         </div>
       </div>
 
-      {/* Copyright */}
+      {/* Copyright and developer attribution section */}
       <div className="footer__bottom">
         <div className="footer__container">
           <p className="footer__copyright">

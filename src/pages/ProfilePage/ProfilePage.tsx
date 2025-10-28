@@ -6,6 +6,15 @@ import { Footer } from "../../components/Footer";
 import { getProfile, updateUser } from "../../services/authService";
 import { deleteUser } from "../../services/authService";
 
+/**
+ * @interface UserProfile
+ * @description Minimal user profile shape used by the Profile page.
+ * @property {string} [id] - User identifier (could be `_id` or `id` from backend)
+ * @property {string} [firstName] - Given name
+ * @property {string} [lastName] - Family name
+ * @property {number} [age] - Age in years
+ * @property {string} [email] - Email address
+ */
 interface UserProfile {
   password?: string;
   id?: string;
@@ -15,16 +24,36 @@ interface UserProfile {
   email?: string;
 }
 
+/**
+ * @component ProfilePage
+ * @description User profile page. Shows current user's profile information,
+ * allows editing basic fields (first name, last name, age), deleting account
+ * and logging out.
+ *
+ * This component reads the current authenticated user's profile from the
+ * backend using `getProfile`, shows a loading and error state, and makes
+ * calls to `updateUser` / `deleteUser` to modify or remove the account.
+ */
 const ProfilePage: React.FC = () => {
+  /** Navigation helper from react-router */
   const navigate = useNavigate();
+  /** Current loaded user profile (null while loading) */
   const [user, setUser] = useState<UserProfile | null>(null);
+  /** Loading flag while profile is being fetched */
   const [loading, setLoading] = useState(true);
+  /** Error message to display when profile fetch fails */
   const [error, setError] = useState<string | null>(null);
+  /** Controls whether edit form is shown */
   const [isEditing, setIsEditing] = useState(false);
+  /** Local state for edited values while in edit mode */
   const [editedUser, setEditedUser] = useState<UserProfile>({});
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
+    /**
+     * Fetch the current user's profile from backend.
+     * Uses `getProfile()` from authService and normalizes the returned shape.
+     */
     const fetchProfile = async () => {
       try {
         const data = await getProfile();
@@ -53,6 +82,11 @@ const ProfilePage: React.FC = () => {
     setEditedUser(user);
     setIsEditing(true);
   };
+
+  /**
+   * Save edited user profile to backend.
+   * Calls `updateUser` and updates local state on success.
+   */
 
   const handleSave = async () => {
     if (!user?.id) return;
@@ -92,11 +126,18 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+  /** Cancel editing and discard local edits */
+
   const handleCancel = () => {
     setIsEditing(false);
   };
 
+  /**
+   * Delete user account after confirmation. On success removes auth token
+   * and navigates the user to registration.
+   */
   const handleDelete = async () => {
+
   const confirmDelete = confirm(" ¿Seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.");
   if (!confirmDelete || !user?.id) return;
 
@@ -111,11 +152,17 @@ const ProfilePage: React.FC = () => {
   }
 };
 
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     alert("Sesión cerrada correctamente ");
     navigate("/login");
   };
+
+  /**
+   * Rendered UI below: shows loading/error states, and the profile card with
+   * edit form. All UI behavior is unchanged; comments above clarify purpose.
+   */
 
   if (loading) {
     return (
@@ -214,12 +261,14 @@ const ProfilePage: React.FC = () => {
                   }
                 />
 
+
                 <label>Correo</label>
                   <input
                     type="email"
                     value={editedUser.email ?? ""}
                     onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
                 />
+
 
 
                 <label>Nueva contraseña</label>
