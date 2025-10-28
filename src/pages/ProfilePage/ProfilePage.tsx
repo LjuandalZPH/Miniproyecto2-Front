@@ -137,19 +137,21 @@ const ProfilePage: React.FC = () => {
    * and navigates the user to registration.
    */
   const handleDelete = async () => {
-    const confirmDelete = confirm(" ¿Seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.");
-    if (!confirmDelete || !user?.id) return;
 
-    try {
-      await deleteUser(user.id);
-      alert("Cuenta eliminada exitosamente ");
-      localStorage.removeItem("token"); // cerrar sesión automáticamente
-      navigate("/register");
-    } catch (error) {
-      console.error("Error al borrar cuenta:", error);
-      alert("Error al eliminar la cuenta ");
-    }
-  };
+  const confirmDelete = confirm(" ¿Seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.");
+  if (!confirmDelete || !user?.id) return;
+
+  try {
+    await deleteUser(user.id);
+    alert("Cuenta eliminada exitosamente ");
+    localStorage.removeItem("token"); 
+    navigate("/register");
+  } catch (error) {
+    console.error("Error al borrar cuenta:", error);
+    alert("Error al eliminar la cuenta ");
+  }
+};
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -258,6 +260,16 @@ const ProfilePage: React.FC = () => {
                     setEditedUser({ ...editedUser, age: Number(e.target.value) })
                   }
                 />
+
+
+                <label>Correo</label>
+                  <input
+                    type="email"
+                    value={editedUser.email ?? ""}
+                    onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
+                />
+
+
 
                 <label>Nueva contraseña</label>
                   <div className="password-field">
