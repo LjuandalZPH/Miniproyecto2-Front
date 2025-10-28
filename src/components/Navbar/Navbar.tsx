@@ -7,7 +7,6 @@ import "./Navbar.scss";
  * - On search submit, navigates to /movies?search=<query>
  */
 export const Navbar = () => {
-  const [activeTab, setActiveTab] = useState("home");
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
