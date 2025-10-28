@@ -5,7 +5,7 @@ import { Footer } from "../../components/Footer";
 import { getProfile, getUserFavorites, toggleFavorite } from "../../services/authService";
 import api from "../../services/api";
 import "./MoviesPlayerPage.scss";
-import { FaStar } from "react-icons/fa";
+import { FaHeart, FaStar } from "react-icons/fa";
 
 /**
  * @interface Subtitle
@@ -296,7 +296,7 @@ const MoviePlayerPage = () => {
           <button className="fav-btn" onClick={handleAddToFavorites}>
             {isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
           </button>
-          <FaStar className={`fav-icon ${isFavorite ? "active" : ""}`} />
+          <FaHeart className={`fav-icon ${isFavorite ? "active" : ""}`} />
         </div>
 
         <p className="movie-description">{movie.description}</p>
